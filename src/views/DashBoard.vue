@@ -1,13 +1,18 @@
 <template>
-  <div>DashBoard</div>
+  <NavBar />
+  <RouterView />
 </template>
 
 <script>
+import NavBar from '../components/NavBar.vue'
 import { useStore } from '@/stores/index'
 import { useRouter } from 'vue-router' // 導入 useRouter
 import { onMounted } from 'vue'
 
 export default {
+  components: {
+    NavBar // 註冊 NavBar 元件
+  },
   setup() {
     const store = useStore()
     const router = useRouter()

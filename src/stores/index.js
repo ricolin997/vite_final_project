@@ -60,6 +60,17 @@ export const useStore = defineStore('main', {
         )
         return false
       }
+    },
+    //登出
+    async logOut() {
+      const api = `${import.meta.env.VITE_API_URL}logout`
+      try {
+        await axios.post(api) // 可選：如果後端需要登出請求
+      } catch (error) {
+        console.error('Logout failed:', error.response?.data?.message || error.message)
+      } finally {
+        this.clearToken() // 清除 token
+      }
     }
   }
 })
