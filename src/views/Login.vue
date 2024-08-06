@@ -53,7 +53,7 @@ export default {
         console.log(response.data)
         if (response.data.success) {
           console.log('登入成功')
-          router.push('/dashboard')
+          router.push('/dashboard/products')
         } else {
           console.error(response.data.message) // 如果登入失敗，顯示錯誤信息
         }
