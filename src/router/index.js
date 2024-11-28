@@ -23,6 +23,29 @@ const router = createRouter({
           path: 'products',
           name: 'products',
           component: () => import('../views/Products.vue')
+        },
+        {
+          path: 'coupons',
+          name: 'coupons',
+          component: () => import('../views/Coupons.vue')
+        }
+      ]
+    },
+    {
+      path: '/user',
+      component: () => import('../views/Userboard.vue'),
+      children: [
+        {
+          path: 'products',
+          component: () => import('../views/UserProducts.vue')
+        },
+        {
+          path: 'product/:productId',
+          component: () => import('../views/UserProductDetail.vue')
+        },
+        {
+          path: 'cart',
+          component: () => import('../views/UserCart.vue')
         }
       ]
     }

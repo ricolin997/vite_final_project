@@ -55,10 +55,11 @@
     <!-- DelModal component -->
     <DelModal
       v-if="showDeleteModal"
-      :product="selectedProduct"
+      :item="selectedProduct"
+      entityName="產品"
+      :onDelete="store.deleteProduct"
       @close="closeDeleteModal"
       @deleted="handleDeleteSuccess"
-      @error="handleDeleteError"
     />
   </div>
 </template>

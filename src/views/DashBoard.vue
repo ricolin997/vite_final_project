@@ -1,7 +1,7 @@
 <template>
   <NavBar />
   <div class="container-fluid"><RouterView /></div>
-  <Toast :autoDismissTime="6000" />
+  <Toast :autoDismissTime="5000" />
 </template>
 
 <script>
