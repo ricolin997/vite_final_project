@@ -9,7 +9,11 @@ export const useStore = defineStore('main', {
     token: null,
     expired: null,
     products: [], // 新增 products 陣列
-    pagination: {} // 新增 pagination 物件
+    userProducts: [],
+    pagination: {}, // 新增 pagination 物件
+    cart: [],
+    coupons: [],
+    couponPagination: {}
   }),
   actions: {
     // 初始化狀態
@@ -126,6 +130,117 @@ export const useStore = defineStore('main', {
         return response
       } catch (error) {
         throw new Error(error.response?.data?.message || '刪除產品失敗')
+      }
+    },
+    //取得產品
+    async getUserProducts() {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/products/all`
+      try {
+        const response = await axios.get(api)
+        this.userProducts = response.data.products
+      } catch (error) {
+        console.error('getUserProduct failed:', error.response?.data?.message || error.message)
+      }
+    }, // 取得購物車資料
+    async getCart() {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/cart`
+      try {
+        const response = await axios.get(api)
+        console.log(response)
+        this.cart = response.data.data.carts
+      } catch (error) {
+        console.error('Error fetching cart:', error.response?.data?.message || error.message)
+      }
+    },
+    // 加入購物車
+    async addToCart(productId, quantity = 1) {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/cart`
+      try {
+        const response = await axios.post(api, {
+          data: { product_id: productId, qty: quantity }
+        })
+        await this.getCart() // 更新購物車
+        return response.data
+      } catch (error) {
+        console.error('Error adding to cart:', error.response?.data?.message || error.message)
+        throw error
+      }
+    },
+
+    // 更新購物車數量
+    async updateCartItem(cartId, quantity) {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/cart/${cartId}`
+      try {
+        const response = await axios.put(api, {
+          data: { product_id: cartId, qty: quantity }
+        })
+        await this.getCart() // 更新購物車
+        return response.data
+      } catch (error) {
+        console.error('Error updating cart:', error.response?.data?.message || error.message)
+        throw error
+      }
+    },
+
+    // 移除購物車商品
+    async removeCartItem(cartId) {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/cart/${cartId}`
+      try {
+        const response = await axios.delete(api)
+        await this.getCart() // 更新購物車
+        return response.data
+      } catch (error) {
+        console.error('Error removing cart item:', error.response?.data?.message || error.message)
+        throw error
+      }
+    },
+
+    //取得優惠券
+    async getCoupons(page = 1) {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/coupons?page=${page}`
+      try {
+        const response = await axios.get(api)
+        console.log(response)
+        this.coupons = response.data.coupons
+        this.couponPagination = response.data.pagination
+      } catch (error) {
+        console.error('Error fetching coupons:', error.response?.data?.message || error.message)
+      }
+    },
+
+    //新增優惠券
+    async createCoupon(coupon) {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/coupon`
+      try {
+        const response = await axios.post(api, { data: coupon })
+        console.log(response)
+        return response
+      } catch (error) {
+        throw new Error(error.response?.data?.message || '新增優惠券失敗')
+      }
+    },
+
+    //修改優惠券
+    async updateCoupon(coupon) {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/coupon/${coupon.id}`
+      try {
+        const response = await axios.put(api, { data: coupon })
+        console.log(response)
+        return response
+      } catch (error) {
+        throw new Error(error.response?.data?.message || '修改優惠券失敗')
+      }
+    },
+
+    //刪除優惠券
+    async deleteCoupon(couponId) {
+      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/coupon/${couponId}`
+      try {
+        const response = await axios.delete(api)
+        console.log(response)
+        return response
+      } catch (error) {
+        throw new Error(error.response?.data?.message || '刪除優惠券失敗')
       }
     }
   }

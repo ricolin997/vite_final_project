@@ -8,7 +8,8 @@
         </div>
         <div class="modal-body">
           <p>
-            您確定要刪除這個產品：<strong>{{ product.title }}</strong> 嗎？此操作無法恢復。
+            您確定要刪除<strong>{{ itemTitle }}</strong
+            >的{{ entityName }}嗎？此操作無法恢復。
           </p>
         </div>
         <div class="modal-footer">
@@ -29,19 +30,25 @@
 
 <script>
 import { ref } from 'vue'
-import { useStore } from '@/stores/index'
 
 export default {
   props: {
-    show: Boolean, // 將模態框顯示狀態作為 prop 傳入
-    product: {
+    show: Boolean,
+    item: {
       type: Object,
       required: true
+    },
+    entityName: {
+      type: String,
+      default: '項目' // 默認名稱
+    },
+    onDelete: {
+      type: Function,
+      required: true // 刪除行為作為回調傳入
     }
   },
   emits: ['close', 'deleted', 'error'],
   setup(props, { emit }) {
-    const store = useStore()
     const isDeleting = ref(false)
 
     const closeModal = () => {
@@ -51,27 +58,16 @@ export default {
     const confirmDelete = async () => {
       isDeleting.value = true
       try {
-        const response = await store.deleteProduct(props.product.id)
-        if (response.data.success) {
-          emit('deleted')
-        } else {
-          emit('error', response.data.message || '刪除失敗')
-        }
+        await props.onDelete(props.item.id)
+        emit('deleted') // 通知父層刪除成功
       } catch (error) {
-        emit('error', error.response?.data?.message || '刪除失敗')
+        emit('error', error.message || '刪除失敗')
       } finally {
         isDeleting.value = false
       }
     }
 
-    return { closeModal, confirmDelete, isDeleting }
+    return { closeModal, confirmDelete, isDeleting, itemTitle: props.item.title }
   }
 }
 </script>
-
-<style scoped>
-.modal.show {
-  display: block;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-</style>
