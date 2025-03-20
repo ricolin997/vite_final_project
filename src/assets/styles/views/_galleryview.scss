@@ -1,0 +1,1166 @@
+/**********************************
+ * GalleryView.vue 相簿樣式
+ **********************************/
+
+/* 相簿頁面通用樣式 */
+.gallery-page {
+  background-color: var(--white);
+  color: var(--text-color);
+}
+
+/* 頂部橫幅 */
+.gallery-banner {
+  height: 40vh;
+  min-height: 400px;
+  background-image: url('@/assets/images/gallery/gallery_banner.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+}
+
+.gallery-banner .banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+  z-index: 1;
+}
+
+.gallery-banner .banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.gallery-banner h2 {
+  font-size: 3.5rem;
+  font-weight: 350;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.gallery-banner p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+}
+
+/* 相簿分類導航 */
+.gallery-category {
+  margin-bottom: 1.5rem;
+  overflow: hidden; /* 確保不會因為內容溢出而產生水平滾動條 */
+  width: 100%;
+}
+
+.gallery-filter {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.filter-line {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--primary-light), transparent);
+  width: 80%;
+  margin: 0 auto;
+}
+
+.filter-items {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.filter-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  min-width: 120px;
+  overflow: hidden;
+}
+
+.filter-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.filter-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  color: var(--primary-color);
+}
+
+.filter-item.active {
+  color: var(--white);
+}
+
+.filter-item.active::before {
+  opacity: 1;
+}
+
+.filter-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.filter-item:hover .filter-icon {
+  transform: scale(1.1);
+}
+
+.filter-item.active .filter-icon {
+  color: var(--white);
+}
+
+.filter-item span {
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.filter-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  height: 3px;
+  width: 30px;
+  background-color: var(--accent-color);
+  transition: transform 0.3s ease;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+.filter-item:hover .filter-indicator {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.filter-item.active .filter-indicator {
+  transform: translateX(-50%) scaleX(1);
+  background-color: var(--white);
+}
+
+@media (max-width: 768px) {
+  .gallery-category {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .gallery-category::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 3;
+    animation: pulseRight 1.5s infinite;
+  }
+
+  @keyframes pulseRight {
+    0% {
+      opacity: 0.6;
+      transform: translateY(-50%) translateX(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-50%) translateX(-5px);
+    }
+    100% {
+      opacity: 0.6;
+      transform: translateY(-50%) translateX(0);
+    }
+  }
+
+  .gallery-filter {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .filter-items {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 1.5rem 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    flex-wrap: nowrap;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+
+  .filter-items::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+
+  .filter-item {
+    min-width: 110px;
+    padding: 1rem;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+
+  .filter-icon {
+    font-size: 1.5rem;
+  }
+
+  .filter-line {
+    width: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  .filter-item {
+    min-width: 100px;
+    padding: 0.8rem;
+  }
+
+  .filter-icon {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter-item span {
+    font-size: 0.9rem;
+  }
+}
+
+/* 舊的相簿導航樣式保留但不使用 */
+.gallery-nav {
+  display: none;
+}
+
+.gallery-nav-item {
+  display: none;
+}
+
+.gallery-nav-icon {
+  display: none;
+}
+
+/* 相簿內容 */
+.gallery-content {
+  padding: 2rem 0 4rem;
+}
+
+.gallery-masonry {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  position: relative;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  cursor: pointer;
+  height: 320px;
+  transform-origin: center;
+}
+
+.gallery-item-large {
+  grid-column: span 2;
+  grid-row: span 2;
+  height: auto;
+}
+
+.gallery-item:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.gallery-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.gallery-item:hover .gallery-image {
+  transform: scale(1.08);
+}
+
+.gallery-category-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: var(--white);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  opacity: 0.9;
+}
+
+.gallery-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 20%, transparent);
+  padding: 3rem 1.5rem 1.5rem;
+  color: var(--white);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.4s ease;
+  z-index: 1;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gallery-info h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.gallery-info p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-bottom: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.gallery-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.gallery-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* 過渡動畫 */
+.gallery-fade-enter-active,
+.gallery-fade-leave-active {
+  transition: all 0.5s ease;
+}
+
+.gallery-fade-enter-from,
+.gallery-fade-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.gallery-fade-move {
+  transition: transform 0.5s ease;
+}
+
+@media (max-width: 1200px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .gallery-item-large {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 992px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .gallery-item {
+    height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .gallery-item-large {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .gallery-item {
+    height: 220px;
+  }
+
+  .gallery-category-tag {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .gallery-info h3 {
+    font-size: 1.2rem;
+  }
+
+  .gallery-info p {
+    font-size: 0.85rem;
+  }
+
+  .gallery-meta {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item-large {
+    grid-column: span 1;
+  }
+
+  .gallery-item {
+    height: 250px;
+  }
+}
+
+@media (max-width: 375px) {
+  .gallery-item {
+    height: 200px;
+  }
+
+  .gallery-overlay {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .gallery-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .gallery-info p {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* 照片查看器 */
+.gallery-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+
+.lightbox-content {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  background-color: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.close-lightbox {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.close-lightbox:hover {
+  background-color: var(--primary-color);
+  transform: rotate(90deg);
+}
+
+.lightbox-image-container {
+  width: 100%;
+  height: 65vh;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.lightbox-info {
+  padding: 1.5rem 2rem;
+  background-color: var(--white);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.lightbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.lightbox-header h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.lightbox-category {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: var(--white);
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.lightbox-info p {
+  font-size: 1.05rem;
+  color: var(--text-light);
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+
+.lightbox-meta {
+  display: flex;
+  gap: 2rem;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.lightbox-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.lightbox-meta i {
+  color: var(--primary-color);
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+
+.lightbox-prev,
+.lightbox-next {
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.8rem;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  background-color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--white);
+  font-size: 1.1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lightbox-counter .current {
+  font-weight: 600;
+  color: var(--primary-light);
+}
+
+.lightbox-counter .divider {
+  opacity: 0.7;
+}
+
+.lightbox-thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background-color: var(--white);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.lightbox-thumbnails::-webkit-scrollbar {
+  height: 5px;
+}
+
+.lightbox-thumbnails::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.lightbox-thumbnails::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 10px;
+}
+
+.lightbox-thumbnail {
+  width: 80px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+}
+
+.lightbox-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lightbox-thumbnail:hover {
+  opacity: 0.9;
+}
+
+.lightbox-thumbnail.active {
+  opacity: 1;
+  border-color: var(--primary-color);
+}
+
+.lightbox-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 60px;
+  background-color: var(--gray-light);
+  border-radius: 6px;
+  color: var(--primary-dark);
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* 照片查看器過渡動畫 */
+.lightbox-fade-enter-active,
+.lightbox-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-fade-enter-from,
+.lightbox-fade-leave-to {
+  opacity: 0;
+}
+
+.lightbox-slide-enter-active,
+.lightbox-slide-leave-active {
+  transition: all 0.4s ease;
+}
+
+.lightbox-slide-enter-from {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.lightbox-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+@media (max-width: 992px) {
+  .lightbox-image-container {
+    height: 60vh;
+  }
+
+  .lightbox-header h3 {
+    font-size: 1.4rem;
+  }
+
+  .lightbox-info {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .lightbox-info p {
+    font-size: 1rem;
+  }
+
+  .lightbox-nav {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .lightbox-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .lightbox-image-container {
+    height: 50vh;
+  }
+
+  .lightbox-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .lightbox-info {
+    padding: 1rem;
+  }
+
+  .lightbox-info p {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .lightbox-meta {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+
+  .lightbox-thumbnails {
+    padding: 0.8rem 1rem;
+  }
+
+  .lightbox-thumbnail {
+    width: 60px;
+    height: 45px;
+  }
+
+  .lightbox-more {
+    width: 60px;
+    height: 45px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .lightbox-image-container {
+    height: 40vh;
+  }
+
+  .lightbox-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .lightbox-category {
+    font-size: 0.8rem;
+    padding: 0.3rem 1rem;
+  }
+
+  .lightbox-info p {
+    font-size: 0.9rem;
+  }
+
+  .lightbox-counter {
+    font-size: 0.9rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .lightbox-thumbnail {
+    width: 50px;
+    height: 40px;
+  }
+
+  .lightbox-more {
+    width: 50px;
+    height: 40px;
+    font-size: 0.8rem;
+  }
+}
+
+/* 預約體驗區塊 */
+.gallery-booking {
+  padding: 5rem 0;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('@/assets/images/gallery/gallery_booking.jpg');
+  background-size: cover;
+  background-position: center;
+  color: var(--white);
+  text-align: center;
+}
+
+.booking-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.booking-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.booking-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.booking-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.booking-buttons .btn {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 1200px) {
+  .gallery-masonry {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .gallery-item-large {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 992px) {
+  .gallery-banner {
+    height: 35vh;
+    min-height: 350px;
+  }
+
+  .gallery-banner h2 {
+    font-size: 3rem;
+  }
+
+  .gallery-masonry {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .lightbox-image-container {
+    height: 60vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-banner {
+    height: 30vh;
+    min-height: 300px;
+  }
+
+  .gallery-banner {
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0;
+    }
+    p {
+      display: none;
+    }
+  }
+
+  .gallery-nav {
+    gap: 0.5rem;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    flex-wrap: nowrap;
+    padding-bottom: 1.5rem;
+  }
+
+  .gallery-nav::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+
+  .gallery-nav-item {
+    min-width: 80px;
+    padding: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .gallery-masonry {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .gallery-item-large {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .gallery-item {
+    height: 200px;
+  }
+
+  .lightbox-content {
+    width: 95%;
+  }
+
+  .lightbox-image-container {
+    height: 50vh;
+  }
+
+  .lightbox-info {
+    padding: 1rem;
+  }
+
+  .lightbox-info h3 {
+    font-size: 1.3rem;
+  }
+
+  .booking-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .booking-buttons .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .gallery-banner {
+    height: 30vh;
+    min-height: 250px;
+  }
+
+  .gallery-banner h2 {
+    font-size: 2rem;
+    padding: 0 0.5rem;
+  }
+
+  .gallery-masonry {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item-large {
+    grid-column: span 1;
+  }
+
+  .lightbox-image-container {
+    height: 40vh;
+  }
+
+  .lightbox-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .lightbox-nav {
+    bottom: 1rem;
+    gap: 1rem;
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+/* 新增超小螢幕的優化 */
+@media (max-width: 375px) {
+  .gallery-banner {
+    height: 25vh;
+    min-height: 200px;
+  }
+
+  .gallery-banner h2 {
+    font-size: 1.8rem;
+  }
+
+  .gallery-nav-item {
+    min-width: 70px;
+    padding: 0.6rem;
+  }
+
+  .gallery-nav-icon {
+    font-size: 1.2rem;
+  }
+
+  .gallery-item {
+    height: 180px;
+  }
+
+  .lightbox-image-container {
+    height: 35vh;
+  }
+}
+
+@media (max-width: 576px) {
+  .gallery-category {
+    margin-bottom: 1rem;
+  }
+
+  .gallery-filter {
+    padding: 0;
+  }
+
+  .filter-items {
+    padding: 1.2rem 0.8rem;
+    gap: 0.8rem;
+  }
+
+  .filter-item {
+    min-width: 90px;
+    padding: 0.8rem;
+  }
+
+  .filter-icon {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter-item span {
+    font-size: 0.9rem;
+  }
+
+  .filter-line {
+    width: 95%;
+  }
+}
+
+@media (max-width: 375px) {
+  .gallery-category::after {
+    display: none;
+  }
+
+  .filter-items {
+    padding: 1rem 0.6rem;
+    gap: 0.6rem;
+  }
+
+  .filter-item {
+    min-width: 80px;
+    padding: 0.7rem;
+  }
+
+  .filter-icon {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .filter-item span {
+    font-size: 0.8rem;
+  }
+}

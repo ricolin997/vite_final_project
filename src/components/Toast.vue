@@ -1,32 +1,3 @@
-<!-- <template>
-  <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div
-      v-for="(toast, index) in toasts"
-      :key="index"
-      class="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-      :class="{
-        show: true,
-        'bg-success text-white': toast.style === 'success',
-        'bg-danger text-white': toast.style === 'error'
-      }"
-      style="opacity: 1"
-    >
-      <div class="toast-body">
-        {{ toast.title }}
-        {{ toast.content }}
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          @click="removeToast(index)"
-          aria-label="Close"
-        ></button>
-      </div>
-    </div>
-  </div>
-</template> -->
 <template>
   <div class="toast-container position-fixed top-0 end-0 p-3">
     <div

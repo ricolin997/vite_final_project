@@ -1,0 +1,49 @@
+// 引入 Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// reset樣式
+@import './base/_reset.scss';
+
+// 引入自定定變數
+@import './base/_variables.scss';
+
+// 通用樣式
+@import './base/_utilities.scss';
+
+// 引入 layout 樣式
+@import './layout/navbar.scss';
+@import './layout/footer.scss';
+
+// 引入 views 樣式
+//前台
+@import './views/homeview.scss';
+@import './views/aboutview.scss';
+@import './views/userproducts.scss';
+@import './views/userproductdetail.scss';
+@import './views/facilitiesview.scss';
+@import './views/attractionsview.scss';
+@import './views/galleryview.scss';
+@import './views/contactview.scss';
+@import './views/faqview.scss';
+@import './views/privacyview.scss';
+@import './views/usercart.scss';
+@import './views/usercheckout.scss';
+@import './views/ordersuccess.scss';
+@import './views/usermember.scss';
+
+//後台
+@import './dashboard/dashboard.scss';
+@import './dashboard/login.scss';
+@import './views/productsview.scss';
+@import './views/ordersview.scss';
+@import './views/couponsview.scss';
+
+// 引入 components 樣式
+@import './components/userOrderDetailModal.scss';
+@import './components/_paymentButton.scss';
+@import './components/_pagination.scss';
+@import './components/_productModal.scss';
+@import './components/_orderDetailsModal.scss';
+@import './components/_editOrderModal.scss';
+@import './components/_couponModal.scss';
+@import './components/_delModal.scss';

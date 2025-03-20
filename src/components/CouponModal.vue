@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="coupon-modal">
     <!-- 背景遮罩 -->
     <div v-if="showBackdrop" class="modal-backdrop fade show"></div>
 
     <!-- Modal -->
-    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="z-index: 1050">
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -15,16 +15,36 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label class="form-label">標題</label>
-              <input type="text" class="form-control" v-model="tempCoupon.title" />
+              <label class="form-label">優惠券名稱</label>
+              <input
+                type="text"
+                class="form-control"
+                v-model="tempCoupon.title"
+                placeholder="請輸入優惠券名稱"
+                required
+              />
             </div>
             <div class="mb-3">
               <label class="form-label">折扣碼</label>
-              <input type="text" class="form-control" v-model="tempCoupon.code" />
+              <input
+                type="text"
+                class="form-control"
+                v-model="tempCoupon.code"
+                placeholder="例如：SUMMER2023"
+                required
+              />
             </div>
             <div class="mb-3">
               <label class="form-label">折扣百分比</label>
-              <input type="number" class="form-control" v-model="tempCoupon.percent" />
+              <input
+                type="number"
+                class="form-control"
+                v-model="tempCoupon.percent"
+                min="1"
+                max="100"
+                placeholder="請輸入1-100之間的數字"
+                required
+              />
             </div>
             <div class="mb-3">
               <label class="form-label">到期日</label>
@@ -39,16 +59,17 @@
               <input
                 type="checkbox"
                 class="form-check-input"
+                id="couponEnabled"
                 :true-value="1"
                 :false-value="0"
                 v-model="tempCoupon.is_enabled"
               />
-              <label class="form-check-label">是否啟用</label>
+              <label class="form-check-label" for="couponEnabled">啟用此優惠券</label>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="emitClose">取消</button>
-            <button type="button" class="btn btn-primary" @click="emitSave">儲存</button>
+            <button type="button" class="btn-secondary" @click="emitClose">取消</button>
+            <button type="button" class="btn-primary" @click="emitSave">儲存優惠券</button>
           </div>
         </div>
       </div>
@@ -60,6 +81,7 @@
 import { ref, watch, computed } from 'vue'
 
 export default {
+  name: 'CouponModal',
   props: {
     coupon: {
       type: Object,
@@ -141,8 +163,5 @@ export default {
 </script>
 
 <style scoped>
-.modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
-  z-index: 1040; /* 層級比 modal 的 z-index 低 */
-}
+/* 樣式已移至 _couponModal.scss */
 </style>

@@ -1,0 +1,2069 @@
+/**********************************
+ * Homeview 首頁樣式
+ **********************************/
+
+/* 首頁 Banner區域樣式*/
+.banner-container {
+  height: 100vh; /* 保持 100vh 高度 */
+  min-height: 600px; /* 確保最小高度 */
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: block;
+}
+
+.banner-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-slide.active {
+  opacity: 1;
+  z-index: 1; /* 確保活動的幻燈片在最上層 */
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.banner-content {
+  text-align: center;
+  color: var(--white);
+  max-width: 800px;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+  margin-top: 0; /* 移除頂部間距 */
+}
+
+.banner-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.banner-content p {
+  font-size: 1.5rem;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+.banner-content .btn {
+  padding: 0.8rem 2.5rem;
+  font-size: 1.1rem;
+  border-width: 2px;
+}
+
+.banner-indicators {
+  position: absolute;
+  bottom: 100px; /* 調整指示器位置，避免與滾動指示器重疊 */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.banner-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.banner-indicator.active {
+  background-color: var(--white);
+}
+
+/* 向下滾動指示器 */
+.scroll-down {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--white);
+  z-index: 10;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.scroll-arrow {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  position: relative;
+  animation: bounce 2s infinite;
+}
+
+.scroll-arrow:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.scroll-down:hover {
+  opacity: 0.8;
+}
+
+/* Banner響應式設計 */
+@media (max-width: 1024px) {
+  .banner-content h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-container {
+    height: 100vh; /* 保持全高 */
+  }
+
+  .banner-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .banner-content p {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-content h1 {
+    font-size: 2rem;
+  }
+}
+
+/**********************************
+   * 首頁預訂框樣式
+   **********************************/
+.booking-section {
+  background-color: var(--white);
+  padding: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.booking-container {
+  background-color: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.booking-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+}
+
+.booking-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.booking-header h2 {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.booking-header p {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.booking-form {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group label i {
+  color: var(--primary-color);
+  margin-right: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--white);
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(58, 77, 57, 0.1);
+  outline: none;
+}
+
+.form-action {
+  display: flex;
+  align-items: flex-end;
+}
+
+.btn-book {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-book:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.booking-features {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.booking-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+}
+
+.booking-feature i {
+  color: var(--accent-color);
+  font-size: 1.2rem;
+}
+
+/* 預訂區塊響應式設計 */
+@media (max-width: 1200px) {
+  .booking-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-section {
+    padding: 0 1rem;
+  }
+
+  .booking-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .booking-form {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .booking-features {
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .booking-feature {
+    width: calc(50% - 1rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .booking-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .booking-feature {
+    width: 100%;
+  }
+}
+
+/**********************************
+   * 首頁飯店介紹區域樣式
+   **********************************/
+.intro {
+  background-color: var(--white);
+  padding: 8rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.intro:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="10" height="10" fill="%23f9f9f9"/></svg>');
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.intro:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background-color: var(--accent-color);
+  opacity: 0.1;
+  border-radius: 50% 0 0 0;
+  z-index: 0;
+}
+
+.intro .container {
+  max-width: 1400px; /* 增加容器寬度 */
+  width: 90%;
+  padding: 0 2rem;
+}
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr; /* 調整比例，讓照片區域更寬 */
+  gap: 5rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* 新的照片展示樣式 */
+.intro-image-showcase {
+  position: relative;
+  height: 700px; /* 增加高度 */
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.showcase-main {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* 減輕陰影效果 */
+  border-radius: 4px;
+}
+
+.showcase-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.showcase-main:hover img {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.image-overlay span {
+  color: var(--white);
+  font-size: 2.8rem; /* 增加字體大小 */
+  font-weight: 300;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.showcase-main:hover .image-overlay span {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.showcase-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.side-image {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* 減輕陰影效果 */
+  border-radius: 4px;
+}
+
+.side-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.side-image:hover img {
+  transform: scale(1.1);
+}
+
+.side-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.side-image:hover::before {
+  opacity: 1;
+}
+
+.intro-content {
+  text-align: left;
+  max-width: 600px;
+  position: relative;
+}
+
+.intro-content::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 60px;
+  height: 60px;
+  border-top: 2px solid var(--accent-color);
+  border-left: 2px solid var(--accent-color);
+  opacity: 0.7;
+}
+
+.intro-content::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  border-bottom: 2px solid var(--accent-color);
+  border-right: 2px solid var(--accent-color);
+  opacity: 0.7;
+}
+
+.intro-content h2 {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  position: relative;
+  display: inline-block;
+}
+
+.intro-content h2:after {
+  content: '';
+  display: block;
+  width: 70px;
+  height: 2px;
+  background-color: var(--primary-color);
+  margin: 20px 0;
+}
+
+.intro-tagline {
+  font-size: 1.8rem;
+  color: var(--primary-light);
+  margin-bottom: 2rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.intro-content p {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  line-height: 1.9;
+  margin-bottom: 1.8rem;
+}
+
+.intro-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin: 3rem 0;
+  position: relative;
+  justify-content: space-between; /* 調整為均勻分布 */
+}
+
+.intro-features::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, var(--accent-color), transparent);
+}
+
+.intro-features::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent-color));
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  transition: transform 0.3s ease;
+  flex: 1 1 calc(50% - 2.5rem); /* 調整為兩列顯示 */
+  min-width: 200px; /* 設置最小寬度 */
+  margin-bottom: 1rem; /* 添加底部間距 */
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.feature:hover .feature-icon {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.feature-text {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.intro-content .btn {
+  margin-top: 2rem;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.intro-content .btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-dark);
+  transition: all 0.4s ease;
+  z-index: -1;
+}
+
+.intro-content .btn:hover::before {
+  left: 0;
+}
+
+.intro-content .btn-outline:hover {
+  color: var(--white);
+  border-color: var(--primary-dark);
+  background-color: transparent;
+}
+
+/* 飯店介紹響應式設計 */
+@media (max-width: 1400px) {
+  .intro-image-showcase {
+    height: 650px;
+  }
+  .image-overlay span {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .intro-image-showcase {
+    height: 600px;
+  }
+
+  .intro-grid {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 4rem;
+  }
+
+  .image-overlay span {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .intro {
+    padding: 6rem 0;
+  }
+
+  .intro-grid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .intro-image-showcase {
+    order: 2;
+    height: 600px;
+    margin: 0 auto;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  .intro-content {
+    order: 1;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .intro-content::before,
+  .intro-content::after {
+    display: none;
+  }
+
+  .intro-content h2:after {
+    margin: 20px auto;
+  }
+
+  .intro-features {
+    justify-content: center;
+  }
+
+  .intro-features::before,
+  .intro-features::after {
+    background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+  }
+}
+
+@media (max-width: 768px) {
+  .intro {
+    padding: 5rem 0;
+  }
+
+  .intro-image-showcase {
+    height: 500px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr 1fr;
+    gap: 15px;
+  }
+
+  .showcase-side {
+    flex-direction: row;
+  }
+
+  .intro-features {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .intro-content h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .intro {
+    padding: 4rem 0;
+  }
+
+  .intro-image-showcase {
+    height: 400px;
+  }
+
+  .showcase-side {
+    display: none;
+  }
+
+  .intro-content h2 {
+    font-size: 2.2rem;
+  }
+
+  .intro-tagline {
+    font-size: 1.5rem;
+  }
+
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+}
+
+/* 照片查看器樣式 */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: lightboxFadeIn 0.3s ease forwards;
+}
+
+@keyframes lightboxFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  margin: auto;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-image {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border: 5px solid var(--white);
+  transform: scale(0.95);
+  animation: scaleIn 0.3s ease forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.close-lightbox {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 2.5rem;
+  color: var(--white);
+  cursor: pointer;
+  z-index: 2001;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-lightbox:hover {
+  background-color: var(--primary-color);
+  transform: rotate(90deg);
+}
+
+.lightbox-nav {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.lightbox-prev,
+.lightbox-next {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: var(--white);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  background-color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+/**********************************
+   * 首頁客房展示區域樣式
+   **********************************/
+.rooms {
+  background-color: var(--secondary-color);
+  padding: 8rem 0;
+  position: relative;
+  overflow: hidden;
+  background-image: url('@/assets/images/homeview/room_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll; /* 改為 scroll 以提高滑動效能 */
+}
+
+.rooms::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.5));
+  z-index: 1;
+  /* 移除模糊效果以提高滑動效能 */
+}
+
+.rooms .container {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+}
+
+.rooms .section-header {
+  margin-bottom: 4rem;
+}
+
+.rooms .section-header h2 {
+  color: var(--white);
+  font-size: 3rem;
+  letter-spacing: 4px;
+  position: relative;
+  display: inline-block;
+}
+
+.rooms .section-header h2::before,
+.rooms .section-header h2::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 1px;
+  background-color: var(--accent-color);
+}
+
+.rooms .section-header h2::before {
+  left: -60px;
+}
+
+.rooms .section-header h2::after {
+  right: -60px;
+}
+
+.rooms .section-header h2:after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: var(--accent-color);
+  margin: 20px auto;
+  position: static;
+}
+
+.rooms .section-header p {
+  color: var(--accent-color);
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  font-weight: 300;
+}
+
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto 3rem;
+}
+
+.room-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+  position: relative;
+  transform: translateY(0);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.room-card:nth-child(2) {
+  transform: none;
+}
+
+.room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.room-image {
+  height: 280px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.room-card:hover .room-image {
+  transform: scale(1.02); // 減少縮放比例
+}
+
+.room-info {
+  padding: 2rem;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  /* 移除模糊效果以提高滑動效能 */
+}
+
+.room-capacity {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
+}
+
+.room-capacity span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.room-capacity span:first-child::before {
+  content: '\f236';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: var(--primary-light);
+}
+
+.room-capacity span:last-child::before {
+  content: '\f1ad';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: var(--primary-light);
+}
+
+.room-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  color: var(--primary-color);
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.room-info p {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.per-night {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+.room-card .btn-view {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  transform: translateY(20px);
+  opacity: 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.room-card:hover .btn-view {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.room-card .btn-view::before {
+  content: '\f061';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+.room-card .btn-view:hover {
+  background-color: var(--primary-dark);
+  transform: scale(1.1);
+}
+
+.view-all {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.view-all .btn {
+  background-color: transparent;
+  color: var(--white);
+  border: 2px solid var(--white);
+  padding: 1rem 3rem;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 50px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.view-all .btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--white);
+  transition: all 0.4s ease;
+  z-index: -1;
+}
+
+.view-all .btn:hover {
+  color: var(--primary-color);
+}
+
+.view-all .btn:hover::before {
+  left: 0;
+}
+
+/* 客房展示響應式設計 */
+@media (max-width: 1200px) {
+  .room-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .room-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rooms .section-header h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .rooms {
+    padding: 6rem 0;
+  }
+
+  .room-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+
+  .rooms .section-header h2 {
+    font-size: 2.2rem;
+  }
+
+  .rooms .section-header p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rooms {
+    padding: 5rem 0;
+  }
+
+  .room-image {
+    height: 220px;
+  }
+
+  .room-info {
+    padding: 1.5rem;
+  }
+
+  .room-info h3 {
+    font-size: 1.5rem;
+  }
+
+  .price {
+    font-size: 1.3rem;
+  }
+}
+
+/* 加載指示器樣式 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(var(--primary-rgb), 0.2);
+  border-top: 5px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 無產品資料時的樣式 */
+.no-rooms {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--text-light);
+  font-size: 1.2rem;
+}
+
+/**********************************
+   * 首頁設施展示區域樣式
+   **********************************/
+.facilities {
+  background-color: var(--white);
+  padding: 8rem 0;
+  position: relative;
+  overflow: hidden;
+  background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="10" height="10" fill="%23f9f9f9"/></svg>');
+}
+
+.facilities::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+}
+
+.facilities .container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.facilities .section-header {
+  margin-bottom: 5rem;
+  text-align: center;
+}
+
+.facilities .section-header h2 {
+  font-size: 3rem;
+  color: var(--primary-color);
+  letter-spacing: 4px;
+  position: relative;
+  display: inline-block;
+}
+
+.facilities .section-header h2::before,
+.facilities .section-header h2::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 1px;
+  background-color: var(--primary-color);
+}
+
+.facilities .section-header h2::before {
+  left: -80px;
+}
+
+.facilities .section-header h2::after {
+  right: -80px;
+}
+
+.facilities .section-header p {
+  font-size: 1.3rem;
+  color: var(--text-light);
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+.facilities-showcase {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.facilities-intro {
+  padding: 3rem;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.facilities-intro::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: -1;
+}
+
+.facilities-intro h3 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.facilities-intro p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.facilities-highlight {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.facilities-highlight span {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1.5rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-facilities {
+  align-self: flex-start;
+  background-color: var(--accent-color);
+  color: var(--primary-dark);
+  text-decoration: none;
+  padding: 1rem 2.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-facilities::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: var(--white);
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.btn-facilities:hover {
+  color: var(--primary-color);
+}
+
+.btn-facilities:hover::before {
+  width: 100%;
+}
+
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.facility-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.facility-card.featured {
+  grid-column: span 1;
+  grid-row: span 2;
+  height: auto;
+}
+
+.facility-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.facility-card:hover .facility-image {
+  transform: scale(1.03);
+}
+
+.facility-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  color: var(--white);
+  transition: background 0.3s ease;
+}
+
+.facility-card:hover .facility-content {
+  background: linear-gradient(
+    to top,
+    rgba(58, 77, 57, 0.9),
+    rgba(58, 77, 57, 0.7),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.facility-icon {
+  width: 50px;
+  height: 50px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.facility-card:hover .facility-icon {
+  opacity: 1;
+}
+
+.facility-content p {
+  font-size: 0.9rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.facility-card:hover .facility-content p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 設施展示響應式設計 */
+@media (max-width: 1200px) {
+  .facilities-showcase {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .facilities-intro {
+    padding: 2.5rem;
+  }
+
+  .facilities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .facility-card.featured {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .facilities {
+    padding: 6rem 0;
+  }
+
+  .facilities .section-header h2 {
+    font-size: 2.5rem;
+  }
+
+  .facilities .section-header h2::before,
+  .facilities .section-header h2::after {
+    width: 40px;
+  }
+
+  .facilities .section-header h2::before {
+    left: -60px;
+  }
+
+  .facilities .section-header h2::after {
+    right: -60px;
+  }
+
+  .facilities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .facility-card.featured {
+    grid-column: span 1;
+  }
+
+  .facility-card {
+    transform: none;
+    will-change: auto;
+    backface-visibility: visible;
+  }
+
+  .facility-image {
+    will-change: auto;
+  }
+
+  .facility-card:hover .facility-image {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .facilities {
+    padding: 5rem 0;
+  }
+
+  .facilities .section-header h2 {
+    font-size: 2rem;
+  }
+
+  .facilities .section-header h2::before,
+  .facilities .section-header h2::after {
+    display: none;
+  }
+
+  .facilities-intro h3 {
+    font-size: 1.8rem;
+  }
+
+  .facility-card {
+    height: 220px;
+  }
+}
+
+/**********************************
+   * 首頁評價區塊樣式
+   **********************************/
+.testimonial {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('@/assets/images/homeview/review_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 8rem 0;
+  position: relative;
+  color: var(--white);
+  overflow: hidden;
+}
+
+.testimonial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(58, 77, 57, 0.3), transparent 70%);
+  z-index: 1;
+}
+
+.testimonial-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.testimonial-header {
+  margin-bottom: 4rem;
+}
+
+.testimonial-header h2 {
+  color: var(--white);
+  font-size: 3rem;
+  letter-spacing: 4px;
+}
+
+.testimonial-header h2:after {
+  background-color: var(--accent-color);
+  width: 80px;
+  height: 3px;
+  margin: 20px auto;
+}
+
+.testimonial-header p {
+  color: var(--accent-color);
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  font-weight: 300;
+}
+
+.testimonial-slider {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+}
+
+.testimonial-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease;
+  transform: translateX(50px);
+}
+
+.testimonial-slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.testimonial-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 3rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+.quote {
+  font-size: 6rem;
+  line-height: 1;
+  font-family: Georgia, serif;
+  margin-bottom: -1rem;
+  color: var(--accent-color);
+  opacity: 0.5;
+  position: absolute;
+  top: 10px;
+  left: 30px;
+}
+
+.testimonial-content p {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reviewer-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 3px solid var(--accent-color);
+}
+
+.reviewer-details {
+  text-align: left;
+}
+
+.reviewer-details h4 {
+  font-size: 1.3rem;
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.rating {
+  margin-bottom: 0.5rem;
+}
+
+.rating i {
+  color: rgba(255, 255, 255, 0.3);
+  margin-right: 3px;
+}
+
+.rating i.active {
+  color: var(--accent-color);
+}
+
+.review-date {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.testimonial-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+  gap: 2rem;
+}
+
+.testimonial-prev,
+.testimonial-next {
+  background-color: transparent;
+  color: var(--white);
+  border: 2px solid var(--accent-color);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testimonial-prev:hover,
+.testimonial-next:hover {
+  background-color: var(--primary-color);
+  color: var(--primary-dark);
+}
+
+.testimonial-indicators {
+  display: flex;
+  gap: 10px;
+}
+
+.testimonial-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.testimonial-indicator.active {
+  background-color: var(--accent-color);
+  transform: scale(1.2);
+}
+
+/* 評價區塊響應式設計 */
+@media (max-width: 992px) {
+  .testimonial {
+    padding: 6rem 0;
+  }
+
+  .testimonial-header h2 {
+    font-size: 2.5rem;
+  }
+
+  .testimonial-content {
+    padding: 2.5rem;
+  }
+
+  .testimonial-content p {
+    font-size: 1.3rem;
+  }
+
+  .quote {
+    font-size: 5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonial {
+    padding: 5rem 0;
+  }
+
+  .testimonial-slider {
+    height: 450px;
+  }
+
+  .testimonial-header h2 {
+    font-size: 2.2rem;
+  }
+
+  .testimonial-content {
+    padding: 2rem;
+  }
+
+  .testimonial-content p {
+    font-size: 1.2rem;
+  }
+
+  .quote {
+    font-size: 4rem;
+    top: 5px;
+    left: 15px;
+  }
+
+  .reviewer-info {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .reviewer-details {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial-slider {
+    height: 500px;
+  }
+
+  .testimonial-content {
+    padding: 1.5rem;
+  }
+
+  .testimonial-content p {
+    font-size: 1.1rem;
+  }
+
+  .quote {
+    font-size: 3rem;
+  }
+
+  .testimonial-prev,
+  .testimonial-next {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}
+
+/**********************************
+ * HomeView.vue 首頁優化
+ **********************************/
+
+/* 增強照片互動效果 */
+.showcase-main,
+.side-image {
+  cursor: pointer;
+  position: relative;
+}
+
+.showcase-main::after,
+.side-image::after {
+  content: '\f00e';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  color: var(--white);
+  font-size: 2rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.showcase-main:hover::after,
+.side-image:hover::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@media (max-width: 768px) {
+  .lightbox-image {
+    max-height: 80vh;
+  }
+
+  .lightbox-nav {
+    bottom: 10px;
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .close-lightbox {
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* 添加硬體加速 */
+.banner-slide,
+.room-image,
+.facility-image,
+.intro-image-showcase,
+.showcase-main img,
+.side-image img,
+.facility-card,
+.facility-content,
+.facility-icon,
+.facility-content p {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* 減少不必要的動畫 */
+@media (prefers-reduced-motion: reduce) {
+  .facility-card,
+  .facility-image,
+  .facility-content,
+  .facility-icon,
+  .facility-content p {
+    transition: none;
+  }
+
+  .facility-card:hover .facility-image {
+    transform: none;
+  }
+
+  .facility-card:hover .facility-content p {
+    transform: none;
+  }
+
+  [v-lazy-load] {
+    transition: none;
+  }
+}
+
+.navbar.transparent .nav-link.active {
+  position: relative;
+}
+
+.navbar.transparent .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--white);
+  opacity: 0.8;
+}
+
+/* 確保小裝置上的導航欄樣式優先級更高 */
+@media (max-width: 768px) {
+  .navbar.transparent .nav-container {
+    background-color: var(--white);
+  }
+
+  .navbar.transparent .nav-link,
+  .navbar.transparent .current-lang,
+  .navbar.transparent .lang-option {
+    color: var(--primary-color) !important;
+    text-shadow: none;
+  }
+
+  .navbar.transparent .nav-link:hover,
+  .navbar.transparent .nav-link.active {
+    color: var(--primary-dark) !important;
+    opacity: 1;
+    text-shadow: none;
+  }
+
+  .navbar.transparent .nav-link.active::after {
+    background-color: var(--primary-color);
+  }
+}

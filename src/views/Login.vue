@@ -1,46 +1,68 @@
 <template>
-  <div class="container mt-5">
-    <form class="row justify-content-center" @submit.prevent="signIn">
-      <div class="col-md-6">
-        <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
-        <div class="mb-2">
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input
-            type="email"
-            id="inputEmail"
-            class="form-control"
-            placeholder="Email address"
-            required
-            autofocus
-            v-model.trim="user.username"
-          />
-        </div>
-        <div class="mb-2">
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input
-            type="password"
-            id="inputPassword"
-            class="form-control"
-            placeholder="Password"
-            required
-            v-model.trim="user.password"
-          />
-        </div>
-        <div v-if="errorMessage" class="text-danger">{{ errorMessage }}</div>
-        <div class="text-end mt-4">
-          <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>
-        </div>
+  <div class="login-page">
+    <div class="login-container">
+      <div class="login-header">
+        <h1>管理後台登入</h1>
+        <p class="subtitle">歡迎回來，請輸入您的帳號密碼</p>
       </div>
-    </form>
+
+      <form class="login-form" @submit.prevent="signIn">
+        <div class="form-group">
+          <label for="inputEmail">電子郵件</label>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input
+              type="email"
+              id="inputEmail"
+              class="form-control"
+              placeholder="請輸入電子郵件"
+              required
+              autofocus
+              v-model.trim="user.username"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputPassword">密碼</label>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="inputPassword"
+              class="form-control"
+              placeholder="請輸入密碼"
+              required
+              v-model.trim="user.password"
+            />
+          </div>
+        </div>
+
+        <div v-if="errorMessage" class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+
+        <button class="btn-login" type="submit">
+          <span>登入系統</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>© 2025 SHIBA HOTEL 飯店管理系統</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { useStore } from '@/stores/index'
-import { useRouter } from 'vue-router' // 導入 useRouter
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
 export default {
+  name: 'LoginView',
   setup() {
     const store = useStore()
     const user = ref({ username: '', password: '' })
@@ -50,12 +72,10 @@ export default {
     const signIn = async () => {
       try {
         const response = await store.login(user.value)
-        console.log(response.data)
         if (response.data.success) {
-          console.log('登入成功')
           router.push('/dashboard/products')
         } else {
-          console.error(response.data.message) // 如果登入失敗，顯示錯誤信息
+          errorMessage.value = response.data.message
         }
       } catch (error) {
         errorMessage.value = '登入失敗：' + (error.response?.data?.message || error.message)

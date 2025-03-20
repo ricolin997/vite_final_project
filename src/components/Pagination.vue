@@ -1,9 +1,14 @@
 <template>
-  <nav aria-label="Page navigation example">
+  <nav aria-label="Page navigation" class="custom-pagination">
     <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
+      <li class="page-item" :class="{ disabled: pages.current_page === 1 }">
+        <a
+          class="page-link"
+          href="#"
+          aria-label="Previous"
+          @click.prevent="updatePage(pages.current_page - 1)"
+        >
+          <span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
         </a>
       </li>
       <li
@@ -16,9 +21,14 @@
           {{ page }}
         </a>
       </li>
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
+      <li class="page-item" :class="{ disabled: pages.current_page === pages.total_pages }">
+        <a
+          class="page-link"
+          href="#"
+          aria-label="Next"
+          @click.prevent="updatePage(pages.current_page + 1)"
+        >
+          <span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
         </a>
       </li>
     </ul>
@@ -26,13 +36,15 @@
 </template>
 
 <script>
-// :pages="{ 頁碼資訊 }"
-// @emitPages="更新頁面事件"
 export default {
+  name: 'PaginationComponent',
   props: ['pages'],
   methods: {
     updatePage(page) {
-      this.$emit('emit-pages', page)
+      // 確保只能在有效頁碼範圍內翻頁
+      if (page >= 1 && page <= this.pages.total_pages) {
+        this.$emit('emit-pages', page)
+      }
     }
   }
 }
