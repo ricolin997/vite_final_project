@@ -1,0 +1,129 @@
+/**********************************
+ * 通用樣式 -
+ **********************************/
+
+/* 按鈕通用樣式 */
+.btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 0; /* 方形按鈕風格 */
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  text-transform: uppercase; /* 大寫字母 */
+  letter-spacing: 1px;
+}
+
+.btn-outline {
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: 1px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.btn-outline-secondary {
+  border: 1px solid var(--text-light);
+  color: var(--text-light);
+  background: transparent;
+  padding: 0.8rem 2rem;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--text-light);
+  color: var(--white);
+}
+
+.btn-book-now {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.8rem 2rem;
+  font-weight: 600;
+}
+
+.btn-book-now:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-check {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 0 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  height: 100%;
+}
+
+.btn-check:hover {
+  background-color: var(--primary-dark);
+}
+
+/* 區塊通用樣式 */
+section {
+  padding: 5rem 5%;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  font-weight: 300; /* 輕量字體 */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.section-header h2:after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 2px;
+  background-color: var(--primary-color);
+  margin: 15px auto;
+}
+
+.section-header p {
+  color: var(--text-light);
+  font-size: 1.2rem;
+}
+
+/* 全局響應式設計 */
+@media (max-width: 768px) {
+  section {
+    padding: 3rem 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
+  }
+}

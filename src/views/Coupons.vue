@@ -1,8 +1,26 @@
 <template>
   <Loading :active="isLoading"></Loading>
-  <div>
-    <button class="btn btn-outline-success mb-3" @click="openModal(null)">新增優惠券</button>
-    <table class="table">
+  <div class="coupons-management">
+    <div class="page-header">
+      <h2>優惠券管理</h2>
+      <div class="action-buttons">
+        <button class="btn-add-coupon" @click="openModal(null)">
+          <i class="bi bi-plus-circle"></i> 新增優惠券
+        </button>
+      </div>
+    </div>
+
+    <div v-if="store.coupons.length === 0 && !isLoading" class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-ticket-perforated"></i>
+      </div>
+      <div class="empty-text">目前沒有優惠券資料</div>
+      <button class="btn-add-first" @click="openModal(null)">
+        <i class="bi bi-plus-circle"></i> 新增第一張優惠券
+      </button>
+    </div>
+
+    <table v-else class="coupons-table">
       <thead>
         <tr>
           <th>名稱</th>
@@ -14,17 +32,33 @@
       </thead>
       <tbody>
         <tr v-for="coupon in store.coupons" :key="coupon.id">
-          <td>{{ coupon.title }}</td>
-          <td>{{ coupon.percent }}%</td>
-          <td>
-            {{ coupon.due_date ? new Date(coupon.due_date * 1000).toLocaleDateString() : '未設定' }}
+          <td class="coupon-title">{{ coupon.title }}</td>
+          <td class="coupon-percent">{{ coupon.percent }}%</td>
+          <td class="coupon-date">
+            {{
+              coupon.due_date
+                ? new Date(coupon.due_date * 1000).toLocaleDateString('zh-TW', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })
+                : '未設定'
+            }}
           </td>
-          <td>{{ coupon.is_enabled ? '啟用' : '未啟用' }}</td>
           <td>
-            <button class="btn btn-sm btn-outline-primary" @click="openModal(coupon)">編輯</button>
-            <button class="btn btn-sm btn-outline-danger" @click="openDeleteModal(coupon)">
-              刪除
-            </button>
+            <span class="coupon-status" :class="coupon.is_enabled ? 'enabled' : 'disabled'">
+              {{ coupon.is_enabled ? '啟用' : '未啟用' }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-edit" @click="openModal(coupon)">
+                <i class="bi bi-pencil-square"></i> 編輯
+              </button>
+              <button class="btn-delete" @click="openDeleteModal(coupon)">
+                <i class="bi bi-trash"></i> 刪除
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -65,6 +99,7 @@ import CouponModal from '../components/CouponModal.vue'
 import DelModal from '../components/DelModal.vue'
 
 export default {
+  name: 'CouponsView',
   components: { Pagination, CouponModal, DelModal },
   setup() {
     const store = useStore()
@@ -111,7 +146,7 @@ export default {
         }
         await fetchCoupons()
         closeModal()
-        emitter.emit('show-toast', { style: 'success', title: '操作成功' })
+        emitter.emit('show-toast', { style: 'success', title: '更新優惠券成功' })
       } catch (error) {
         emitter.emit('show-toast', { style: 'error', title: '操作失敗', content: error.message })
       }

@@ -1,17 +1,15 @@
 <template>
-  <div>
+  <div class="product-modal">
     <div class="modal-backdrop fade show"></div>
 
     <div class="modal show d-block" tabindex="-1">
       <div class="modal-dialog modal-xl">
-        <div class="modal-content border-0">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">{{ productCopy.id ? '編輯產品' : '新增產品' }}</h5>
-            <button
-              type="button"
-              class="btn btn-close btn-outline-light"
-              @click="closeModal"
-            ></button>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" :class="{ 'edit-mode': productCopy.id }">
+              {{ productCopy.id ? '編輯產品' : '新增產品' }}
+            </h5>
+            <button type="button" class="btn-close" @click="closeModal"></button>
           </div>
           <div class="modal-body">
             <div class="row" v-if="productCopy">
@@ -26,55 +24,51 @@
                     placeholder="請輸入圖片連結"
                   />
                 </div>
-                <img
-                  :src="productCopy.imageUrl || 'https://via.placeholder.com/150'"
-                  class="img-fluid"
-                  alt=""
-                />
+                <div class="image-preview-container">
+                  <img
+                    v-if="productCopy.imageUrl"
+                    :src="productCopy.imageUrl"
+                    class="img-fluid"
+                    alt="產品首圖"
+                  />
+                  <div v-else class="no-image">
+                    <span>尚未設定圖片</span>
+                  </div>
+                </div>
 
-                <!-- 多圖 -->
-                <p class="mt-5">輸入內容圖網址</p>
-                <div>
+                <!-- 多圖上傳區域 -->
+                <div class="multi-image-container">
+                  <h6 class="section-title">內容圖片</h6>
                   <div
                     v-for="(image, index) in productCopy.imagesUrl"
                     :key="index"
-                    class="mb-3 input-group"
+                    class="image-item"
                   >
-                    <div>
+                    <div class="d-flex">
                       <input
                         v-model="productCopy.imagesUrl[index]"
                         type="url"
                         class="form-control"
                         placeholder="請輸入圖片連結"
                       />
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger"
-                        @click="removeImage(index)"
-                      >
-                        移除
+                      <button type="button" class="btn-remove" @click="removeImage(index)">
+                        <i class="bi bi-trash"></i>
                       </button>
                     </div>
 
-                    <div>
-                      <img
-                        v-if="productCopy.imagesUrl[index]"
-                        :src="productCopy.imagesUrl[index]"
-                        class="img-fluid mt-2"
-                        alt="圖片預覽"
-                        style="max-width: 180px"
-                      />
+                    <div class="preview-image" v-if="productCopy.imagesUrl[index]">
+                      <img :src="productCopy.imagesUrl[index]" class="img-fluid" alt="圖片預覽" />
                     </div>
                   </div>
-                  <div>
-                    <button class="btn btn-outline-primary btn-sm d-block w-100" @click="addImage">
-                      新增內容圖片
-                    </button>
-                  </div>
-                  <div class="my-3">
-                    <label for="customFile" class="form-label"
-                      >或 上傳圖片
-                      <i class="fas fa-spinner fa-spin"></i>
+                  <button class="btn-add-image" @click="addImage">
+                    <i class="bi bi-plus-circle"></i> 新增內容圖片
+                  </button>
+
+                  <div class="file-upload-container">
+                    <label for="customFile" class="form-label">
+                      上傳圖片
+                      <i class="bi bi-cloud-upload" v-if="!isUploading"></i>
+                      <i class="bi bi-arrow-repeat spin" v-else></i>
                     </label>
                     <input
                       type="file"
@@ -163,27 +157,23 @@
                   ></textarea>
                 </div>
 
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input
-                      v-model="productCopy.is_enabled"
-                      class="form-check-input"
-                      type="checkbox"
-                      :true-value="1"
-                      :false-value="0"
-                      id="is_enabled"
-                    />
-                    <label class="form-check-label" for="is_enabled"> 是否啟用 </label>
-                  </div>
+                <div class="form-check">
+                  <input
+                    v-model="productCopy.is_enabled"
+                    class="form-check-input"
+                    type="checkbox"
+                    :true-value="1"
+                    :false-value="0"
+                    id="is_enabled"
+                  />
+                  <label class="form-check-label" for="is_enabled">是否啟用</label>
                 </div>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" @click="closeModal">
-              取消
-            </button>
-            <button type="button" class="btn btn-primary" @click="saveProduct">確認</button>
+            <button type="button" class="btn btn-cancel" @click="closeModal">取消</button>
+            <button type="button" class="btn btn-save" @click="saveProduct">確認</button>
           </div>
         </div>
       </div>
@@ -220,7 +210,7 @@ export default {
           ? [...this.product.imagesUrl]
           : ['', '', '', '', ''] // 如果沒有圖片網址，初始化為五個空欄位
       },
-      uploadedImages: [] // 新增的陣列
+      isUploading: false
     }
   },
   watch: {
@@ -230,7 +220,6 @@ export default {
           ...newValue,
           imagesUrl: newValue.imagesUrl.length ? [...newValue.imagesUrl] : ['', '', '', '', ''] // 確保有五個欄位
         }
-        this.uploadedImages = newValue.imagesUrl // 更新已上傳的圖片
       },
       deep: true,
       immediate: true
@@ -255,6 +244,7 @@ export default {
       const file = event.target.files[0] // 獲取選中的檔案
       if (!file) return // 如果沒有選擇檔案，則返回
 
+      this.isUploading = true // 開始上傳
       const formData = new FormData()
       formData.append('file-to-upload', file) // 將檔案添加到 FormData
 
@@ -266,10 +256,16 @@ export default {
           }
         })
         // 假設返回的 response.data 包含圖片的 URL
-        this.productCopy.imageUrl = response.data.url // 更新圖片網址
-        console.log(response)
+        this.productCopy.imageUrl = response.data.imageUrl || response.data.url // 更新圖片網址
+        console.log('上傳成功:', response.data)
       } catch (error) {
         console.error('圖片上傳失敗:', error)
+      } finally {
+        this.isUploading = false // 結束上傳
+        // 清空檔案輸入框，以便可以再次選擇同一個檔案
+        if (this.$refs.fileInput) {
+          this.$refs.fileInput.value = ''
+        }
       }
     }
   }
@@ -277,10 +273,16 @@ export default {
 </script>
 
 <style scoped>
-.modal.show {
-  display: block;
+.spin {
+  animation: spin 1s linear infinite;
 }
-/* .modal-backdrop.show {
-  opacity: 0.5;
-} */
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>

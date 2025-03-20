@@ -1,0 +1,1163 @@
+/* 訂單成功頁面樣式 */
+.order-success {
+  padding: 120px 0 80px;
+  background-color: var(--secondary-color);
+  min-height: 100vh;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95)),
+    url('/src/assets/images/pattern-bg.png');
+  background-size: 200px;
+  background-attachment: fixed;
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .success-content {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    padding: 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(
+        to right,
+        var(--primary-light),
+        var(--primary-color),
+        var(--primary-dark)
+      );
+    }
+  }
+
+  .success-icon {
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+
+    i {
+      font-size: 5rem;
+      color: #28a745;
+      animation: pulse 2s infinite;
+    }
+  }
+
+  /* 彩色紙屑動畫 */
+  .confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-light);
+    opacity: 0.8;
+    animation: confetti-fall 5s linear infinite;
+
+    &:nth-child(odd) {
+      background-color: var(--accent-color);
+    }
+
+    &:nth-child(3n) {
+      background-color: #28a745;
+    }
+
+    &:nth-child(4n) {
+      background-color: #007bff;
+    }
+
+    &:nth-child(1) {
+      left: 5%;
+      width: 6px;
+      height: 6px;
+      animation-delay: 0.2s;
+      animation-duration: 3s;
+      transform: rotate(18deg);
+    }
+    &:nth-child(2) {
+      left: 10%;
+      width: 7px;
+      height: 7px;
+      animation-delay: 0.4s;
+      animation-duration: 4s;
+      transform: rotate(36deg);
+    }
+    &:nth-child(3) {
+      left: 15%;
+      width: 8px;
+      height: 8px;
+      animation-delay: 0.6s;
+      animation-duration: 5s;
+      transform: rotate(54deg);
+    }
+    &:nth-child(4) {
+      left: 20%;
+      width: 9px;
+      height: 9px;
+      animation-delay: 0.8s;
+      animation-duration: 6s;
+      transform: rotate(72deg);
+    }
+    &:nth-child(5) {
+      left: 25%;
+      width: 10px;
+      height: 10px;
+      animation-delay: 1s;
+      animation-duration: 7s;
+      transform: rotate(90deg);
+    }
+    &:nth-child(6) {
+      left: 30%;
+      width: 11px;
+      height: 11px;
+      animation-delay: 1.2s;
+      animation-duration: 3s;
+      transform: rotate(108deg);
+    }
+    &:nth-child(7) {
+      left: 35%;
+      width: 12px;
+      height: 12px;
+      animation-delay: 1.4s;
+      animation-duration: 4s;
+      transform: rotate(126deg);
+    }
+    &:nth-child(8) {
+      left: 40%;
+      width: 13px;
+      height: 13px;
+      animation-delay: 1.6s;
+      animation-duration: 5s;
+      transform: rotate(144deg);
+    }
+    &:nth-child(9) {
+      left: 45%;
+      width: 14px;
+      height: 14px;
+      animation-delay: 1.8s;
+      animation-duration: 6s;
+      transform: rotate(162deg);
+    }
+    &:nth-child(10) {
+      left: 50%;
+      width: 15px;
+      height: 15px;
+      animation-delay: 2s;
+      animation-duration: 7s;
+      transform: rotate(180deg);
+    }
+    &:nth-child(11) {
+      left: 55%;
+      width: 6px;
+      height: 6px;
+      animation-delay: 2.2s;
+      animation-duration: 3s;
+      transform: rotate(198deg);
+    }
+    &:nth-child(12) {
+      left: 60%;
+      width: 7px;
+      height: 7px;
+      animation-delay: 2.4s;
+      animation-duration: 4s;
+      transform: rotate(216deg);
+    }
+    &:nth-child(13) {
+      left: 65%;
+      width: 8px;
+      height: 8px;
+      animation-delay: 2.6s;
+      animation-duration: 5s;
+      transform: rotate(234deg);
+    }
+    &:nth-child(14) {
+      left: 70%;
+      width: 9px;
+      height: 9px;
+      animation-delay: 2.8s;
+      animation-duration: 6s;
+      transform: rotate(252deg);
+    }
+    &:nth-child(15) {
+      left: 75%;
+      width: 10px;
+      height: 10px;
+      animation-delay: 3s;
+      animation-duration: 7s;
+      transform: rotate(270deg);
+    }
+    &:nth-child(16) {
+      left: 80%;
+      width: 11px;
+      height: 11px;
+      animation-delay: 3.2s;
+      animation-duration: 3s;
+      transform: rotate(288deg);
+    }
+    &:nth-child(17) {
+      left: 85%;
+      width: 12px;
+      height: 12px;
+      animation-delay: 3.4s;
+      animation-duration: 4s;
+      transform: rotate(306deg);
+    }
+    &:nth-child(18) {
+      left: 90%;
+      width: 13px;
+      height: 13px;
+      animation-delay: 3.6s;
+      animation-duration: 5s;
+      transform: rotate(324deg);
+    }
+    &:nth-child(19) {
+      left: 95%;
+      width: 14px;
+      height: 14px;
+      animation-delay: 3.8s;
+      animation-duration: 6s;
+      transform: rotate(342deg);
+    }
+    &:nth-child(20) {
+      left: 100%;
+      width: 15px;
+      height: 15px;
+      animation-delay: 4s;
+      animation-duration: 7s;
+      transform: rotate(360deg);
+    }
+  }
+
+  h2 {
+    font-family: $font-serif;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .success-message {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .order-details {
+    background-color: rgba(var(--primary-color-rgb), 0.03);
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 35px;
+    position: relative;
+    z-index: 2;
+    transition: var(--transition);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .order-number {
+      margin-bottom: 15px;
+
+      .label {
+        font-weight: 600;
+        color: var(--text-color);
+        margin-right: 5px;
+      }
+
+      .value {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+    }
+
+    .confirmation-note {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+  }
+
+  /* 訂單摘要樣式 */
+  .order-summary {
+    background-color: var(--gray-light);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+
+    h3 {
+      font-family: $font-serif;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 2px;
+        background-color: var(--primary-light);
+      }
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px dashed rgba(var(--primary-color-rgb), 0.1);
+
+      &:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+
+    .summary-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      flex-shrink: 0;
+
+      i {
+        color: var(--primary-color);
+        font-size: 1.1rem;
+      }
+    }
+
+    .summary-text {
+      flex-grow: 1;
+    }
+
+    .summary-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 3px;
+    }
+
+    .summary-value {
+      font-size: 1.1rem;
+      color: var(--text-color);
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  /* 付款狀態樣式 */
+  .payment-status {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+    padding: 15px 20px;
+    margin-bottom: 30px;
+    text-align: left;
+
+    .status-icon {
+      margin-right: 15px;
+
+      i {
+        font-size: 1.8rem;
+        color: #ffc107;
+      }
+    }
+
+    .status-text {
+      h4 {
+        font-size: 1.1rem;
+        color: var(--text-color);
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      p {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin: 0;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 25px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+
+      i {
+        transition: transform 0.3s ease;
+      }
+
+      &.home-btn {
+        background-color: var(--primary-color);
+        color: var(--white);
+
+        &:hover {
+          background-color: var(--primary-dark);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+          i {
+            transform: translateX(-3px);
+          }
+        }
+      }
+
+      &.browse-more-btn {
+        background-color: rgba(var(--primary-color-rgb), 0.1);
+        color: var(--primary-color);
+
+        &:hover {
+          background-color: rgba(var(--primary-color-rgb), 0.15);
+          transform: translateY(-2px);
+
+          i {
+            transform: translateX(3px);
+          }
+        }
+      }
+
+      &.payment-btn {
+        background-color: #28a745;
+        color: var(--white);
+        position: relative;
+        overflow: hidden;
+
+        &:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: 0.5s;
+        }
+
+        &:hover {
+          background-color: #218838;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+
+          &:before {
+            left: 100%;
+          }
+
+          i {
+            transform: translateX(3px);
+          }
+        }
+      }
+    }
+  }
+
+  /* 步驟指示樣式 */
+  .next-steps {
+    margin-bottom: 40px;
+
+    h3 {
+      font-family: $font-serif;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      position: relative;
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 2px;
+        background-color: var(--primary-light);
+      }
+    }
+
+    .steps-container {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background-color: var(--gray);
+        z-index: 1;
+      }
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 33.333%;
+      position: relative;
+      z-index: 2;
+
+      .step-number {
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-color);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 15px rgba(var(--primary-color-rgb), 0.3);
+      }
+
+      .step-content {
+        text-align: center;
+        padding: 0 10px;
+
+        h4 {
+          font-size: 1.1rem;
+          color: var(--primary-color);
+          margin-bottom: 5px;
+          font-weight: 600;
+        }
+
+        p {
+          font-size: 0.9rem;
+          color: var(--text-light);
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .contact-info {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid var(--gray);
+
+    p {
+      color: var(--text-color);
+      margin-bottom: 15px;
+    }
+
+    .contact-methods {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-color);
+
+      i {
+        font-size: 1.1rem;
+      }
+
+      span {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/* 脈動動畫 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 彩色紙屑下落動畫 */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(1000px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 1200px) {
+  .order-success {
+    .container {
+      padding: 0 15px;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .order-success {
+    padding: 100px 0 60px;
+
+    .success-content {
+      padding: 40px 35px;
+    }
+
+    .success-icon i {
+      font-size: 4.5rem;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+    }
+
+    .success-message {
+      font-size: 1.1rem;
+    }
+
+    .order-details {
+      padding: 20px;
+    }
+
+    .order-summary {
+      padding: 20px;
+    }
+
+    .payment-status {
+      padding: 12px 15px;
+    }
+
+    .action-buttons {
+      gap: 15px;
+    }
+
+    .next-steps {
+      .steps-container {
+        gap: 25px;
+      }
+
+      .step {
+        .step-number {
+          width: 45px;
+          height: 45px;
+          font-size: 1.2rem;
+        }
+
+        .step-content {
+          h4 {
+            font-size: 1rem;
+          }
+
+          p {
+            font-size: 0.85rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .order-success {
+    padding: 80px 0 40px;
+
+    .success-content {
+      padding: 35px 30px;
+    }
+
+    .success-icon i {
+      font-size: 4rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .success-message {
+      font-size: 1rem;
+    }
+
+    .order-details {
+      padding: 18px 15px;
+
+      .order-number {
+        .value {
+          font-size: 1.1rem;
+        }
+      }
+
+      .confirmation-note {
+        font-size: 0.9rem;
+      }
+    }
+
+    .order-summary {
+      padding: 18px 15px;
+
+      h3 {
+        font-size: 1.3rem;
+      }
+
+      .summary-item {
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+      }
+
+      .summary-icon {
+        width: 35px;
+        height: 35px;
+
+        i {
+          font-size: 1rem;
+        }
+      }
+
+      .summary-text {
+        .summary-label {
+          font-size: 0.85rem;
+        }
+
+        .summary-value {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .payment-status {
+      padding: 10px 12px;
+
+      .status-icon i {
+        font-size: 1.6rem;
+      }
+
+      .status-text {
+        h4 {
+          font-size: 1rem;
+        }
+
+        p {
+          font-size: 0.85rem;
+        }
+      }
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      gap: 12px;
+
+      a {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+      }
+    }
+
+    .next-steps {
+      margin-bottom: 35px;
+
+      h3 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+      }
+
+      .steps-container {
+        gap: 20px;
+      }
+
+      .step {
+        .step-number {
+          width: 40px;
+          height: 40px;
+          font-size: 1.1rem;
+        }
+
+        .step-content {
+          h4 {
+            font-size: 0.95rem;
+          }
+
+          p {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+
+    .contact-info {
+      margin-top: 25px;
+      padding-top: 25px;
+
+      p {
+        font-size: 0.9rem;
+      }
+
+      .contact-methods {
+        gap: 20px;
+      }
+
+      .contact-method {
+        font-size: 0.9rem;
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .order-success {
+    padding: 70px 0 30px;
+
+    .success-content {
+      padding: 30px 25px;
+    }
+
+    .success-icon i {
+      font-size: 3.5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    .success-message {
+      font-size: 0.95rem;
+    }
+
+    .order-details {
+      padding: 15px 12px;
+
+      .order-number {
+        .value {
+          font-size: 1rem;
+        }
+      }
+
+      .confirmation-note {
+        font-size: 0.85rem;
+      }
+    }
+
+    .order-summary {
+      padding: 15px 12px;
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      .summary-item {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+      }
+
+      .summary-icon {
+        width: 30px;
+        height: 30px;
+
+        i {
+          font-size: 0.9rem;
+        }
+      }
+
+      .summary-text {
+        .summary-label {
+          font-size: 0.8rem;
+        }
+
+        .summary-value {
+          font-size: 0.95rem;
+        }
+      }
+    }
+
+    .payment-status {
+      padding: 8px 10px;
+
+      .status-icon i {
+        font-size: 1.4rem;
+      }
+
+      .status-text {
+        h4 {
+          font-size: 0.95rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    .action-buttons {
+      gap: 10px;
+
+      a {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+    }
+
+    .next-steps {
+      margin-bottom: 30px;
+
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+      }
+
+      .steps-container {
+        gap: 15px;
+      }
+
+      .step {
+        .step-number {
+          width: 35px;
+          height: 35px;
+          font-size: 1rem;
+        }
+
+        .step-content {
+          h4 {
+            font-size: 0.9rem;
+          }
+
+          p {
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+
+    .contact-info {
+      margin-top: 20px;
+      padding-top: 20px;
+
+      p {
+        font-size: 0.85rem;
+      }
+
+      .contact-methods {
+        gap: 15px;
+      }
+
+      .contact-method {
+        font-size: 0.85rem;
+
+        i {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .order-success {
+    padding: 60px 0 20px;
+
+    .success-content {
+      padding: 25px 20px;
+    }
+
+    .success-icon i {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    .success-message {
+      font-size: 0.9rem;
+    }
+
+    .order-details {
+      padding: 12px 10px;
+
+      .order-number {
+        .value {
+          font-size: 0.95rem;
+        }
+      }
+
+      .confirmation-note {
+        font-size: 0.8rem;
+      }
+    }
+
+    .order-summary {
+      padding: 12px 10px;
+
+      h3 {
+        font-size: 1.1rem;
+      }
+
+      .summary-item {
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+      }
+
+      .summary-icon {
+        width: 28px;
+        height: 28px;
+
+        i {
+          font-size: 0.85rem;
+        }
+      }
+
+      .summary-text {
+        .summary-label {
+          font-size: 0.75rem;
+        }
+
+        .summary-value {
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .payment-status {
+      padding: 8px 10px;
+
+      .status-icon i {
+        font-size: 1.3rem;
+      }
+
+      .status-text {
+        h4 {
+          font-size: 0.9rem;
+        }
+
+        p {
+          font-size: 0.75rem;
+        }
+      }
+    }
+
+    .action-buttons {
+      gap: 8px;
+
+      a {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+    }
+
+    .next-steps {
+      margin-bottom: 25px;
+
+      h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+      }
+
+      .steps-container {
+        gap: 12px;
+      }
+
+      .step {
+        .step-number {
+          width: 32px;
+          height: 32px;
+          font-size: 0.95rem;
+        }
+
+        .step-content {
+          h4 {
+            font-size: 0.85rem;
+          }
+
+          p {
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+
+    .contact-info {
+      margin-top: 15px;
+      padding-top: 15px;
+
+      p {
+        font-size: 0.8rem;
+      }
+
+      .contact-methods {
+        gap: 12px;
+      }
+
+      .contact-method {
+        font-size: 0.8rem;
+
+        i {
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}

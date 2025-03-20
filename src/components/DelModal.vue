@@ -1,27 +1,36 @@
 <template>
-  <div class="modal show fade d-block" tabindex="-1" v-show="show" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">確認刪除</h5>
-          <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>
-            您確定要刪除<strong>{{ itemTitle }}</strong
-            >的{{ entityName }}嗎？此操作無法恢復。
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeModal">取消</button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            @click="confirmDelete"
-            :disabled="isDeleting"
-          >
-            確認刪除
-          </button>
+  <div class="delete-modal">
+    <!-- 背景遮罩 -->
+    <div class="modal-backdrop fade show"></div>
+
+    <div
+      class="modal show fade d-block"
+      tabindex="-1"
+      v-show="show"
+      aria-modal="true"
+      role="dialog"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">確認刪除</h5>
+            <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="warning-icon">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <p>
+              您確定要刪除<strong>{{ itemTitle }}</strong
+              >的{{ entityName }}嗎？此操作無法恢復。
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" @click="closeModal">取消</button>
+            <button type="button" class="btn-danger" @click="confirmDelete" :disabled="isDeleting">
+              {{ isDeleting ? '刪除中...' : '確認刪除' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -29,9 +38,10 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 export default {
+  name: 'DelModal',
   props: {
     show: Boolean,
     item: {
@@ -51,6 +61,12 @@ export default {
   setup(props, { emit }) {
     const isDeleting = ref(false)
 
+    const itemTitle = computed(() => {
+      if (props.item.title) return props.item.title
+      if (props.item.user && props.item.user.name) return props.item.user.name
+      return '此'
+    })
+
     const closeModal = () => {
       emit('close')
     }
@@ -67,7 +83,14 @@ export default {
       }
     }
 
-    return { closeModal, confirmDelete, isDeleting, itemTitle: props.item.title }
+    return {
+      closeModal,
+      confirmDelete,
+      isDeleting,
+      itemTitle
+    }
   }
 }
 </script>
+
+<style scoped></style>

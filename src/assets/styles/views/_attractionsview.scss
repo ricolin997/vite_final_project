@@ -1,0 +1,796 @@
+/**********************************
+ * Attractions.vue 附近景點樣式
+ **********************************/
+
+/* 景點頁面通用樣式 */
+.attractions-page {
+  background-color: var(--white);
+  color: var(--text-color);
+}
+
+/* 頂部橫幅 */
+.attractions-banner {
+  height: 40vh;
+  min-height: 400px;
+  background-image: url('@/assets/images/attractions/attractions_banner.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+}
+
+.attractions-banner .banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+  z-index: 1;
+}
+
+.attractions-banner .banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.attractions-banner h2 {
+  font-size: 3.5rem;
+  font-weight: 350;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.attractions-banner p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+}
+
+/* 景點分類導航 */
+.attractions-category {
+  margin-bottom: 3rem;
+  padding: 4rem 0;
+  background-color: var(--gray-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.attractions-category::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233a4d39' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.category-title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--primary-dark);
+  font-weight: 300;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.category-title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  background-color: var(--accent-color);
+  margin: 10px auto;
+}
+
+.category-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.category-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background-color: var(--white);
+  border-radius: 16px;
+  min-width: 120px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+.category-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, var(--primary-light), var(--primary-color));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+.category-item:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.category-item.active {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: var(--white);
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.category-icon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: all 0.4s ease;
+  z-index: 1;
+}
+
+.category-icon i {
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  transition: all 0.4s ease;
+}
+
+.category-item:hover .category-icon {
+  transform: rotateY(180deg);
+  background-color: var(--white);
+}
+
+.category-item.active .category-icon {
+  background-color: var(--white);
+  transform: rotateY(180deg);
+}
+
+.category-item:hover .category-icon i {
+  transform: rotateY(180deg);
+  color: var(--primary-color);
+}
+
+.category-item.active .category-icon i {
+  transform: rotateY(180deg);
+  color: var(--primary-color);
+}
+
+.category-item span {
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.category-item::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid var(--primary-color);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.category-item.active::after {
+  bottom: -12px;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .category-nav {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    flex-wrap: nowrap;
+    gap: 1rem;
+  }
+
+  .category-nav::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+
+  .category-item {
+    min-width: 110px;
+    padding: 1rem;
+    flex-shrink: 0;
+  }
+
+  .category-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .category-icon i {
+    font-size: 1.5rem;
+  }
+
+  .category-item span {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .category-item {
+    min-width: 100px;
+    padding: 0.8rem;
+  }
+
+  .category-icon {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 0.8rem;
+  }
+
+  .category-icon i {
+    font-size: 1.3rem;
+  }
+}
+
+/* 景點列表 */
+.attractions-list {
+  padding: 2rem 0 4rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: var(--text-light);
+}
+
+.attractions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.attraction-card-wrapper {
+  width: 100%;
+  display: flex;
+}
+
+.attraction-card {
+  background-color: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.attraction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.attraction-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.attraction-distance {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: var(--white);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.attraction-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.attraction-content h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  color: var(--primary-dark);
+}
+
+.attraction-description {
+  margin-bottom: 1rem;
+  color: var(--text-light);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.attraction-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-light);
+}
+
+.attraction-type {
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.attraction-more {
+  color: var(--primary-color);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.attraction-more:hover {
+  color: var(--primary-dark);
+}
+
+/* 景點詳情彈窗 */
+.attraction-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal-content {
+  background-color: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: var(--white);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: var(--transition);
+}
+
+.close-modal:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-image {
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.modal-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+}
+
+.modal-title {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  color: var(--white);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.modal-body {
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.modal-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--gray);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.info-item i {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.modal-description {
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* 飯店位置地圖 */
+.hotel-location {
+  padding: 4rem 0;
+  background-color: var(--gray-light);
+}
+
+.map-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* 交通指南 */
+.transportation-guide {
+  padding: 4rem 0;
+}
+
+.transport-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.transport-item {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.transport-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.transport-icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.transport-item h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--primary-dark);
+}
+
+.transport-item p {
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* 響應式設計 */
+@media (max-width: 992px) {
+  .attractions-banner {
+    height: 35vh;
+    min-height: 350px;
+  }
+
+  .attractions-banner h2 {
+    font-size: 3rem;
+  }
+
+  .modal-title {
+    font-size: 2rem;
+  }
+
+  .attractions-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .attractions-banner {
+    height: 30vh;
+    min-height: 300px;
+  }
+
+  .attractions-banner {
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0;
+    }
+    p {
+      display: none;
+    }
+  }
+
+  .category-nav {
+    gap: 0.5rem;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    flex-wrap: nowrap;
+    padding-bottom: 1.5rem;
+  }
+
+  .category-nav::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+
+  .category-item {
+    min-width: 80px;
+    padding: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
+  }
+
+  .attractions-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .modal-image {
+    height: 200px;
+  }
+
+  .modal-title {
+    font-size: 1.8rem;
+    bottom: 1.5rem;
+    left: 1.5rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .attractions-banner {
+    height: 30vh;
+    min-height: 250px;
+  }
+
+  .attractions-banner h2 {
+    font-size: 2rem;
+    padding: 0 0.5rem;
+  }
+
+  .attractions-banner .banner-content {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .attractions-list .container {
+    padding: 0;
+  }
+
+  .attractions-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+    width: 100%;
+    max-width: 100%;
+    gap: 1.5rem;
+  }
+
+  .attraction-card-wrapper {
+    width: 100%;
+  }
+
+  .attraction-card {
+    max-width: 100%;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .section-header {
+    padding: 0 1rem;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+    width: 95%;
+    border-radius: 8px;
+  }
+
+  .modal-image {
+    height: 180px;
+  }
+
+  .modal-title {
+    font-size: 1.5rem;
+    bottom: 1rem;
+    left: 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-info {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .info-item {
+    font-size: 0.9rem;
+  }
+
+  .modal-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem;
+  }
+
+  .transport-options {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+
+  .transport-item {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* 新增超小螢幕的優化 */
+@media (max-width: 375px) {
+  .attractions-banner {
+    height: 25vh;
+    min-height: 200px;
+  }
+
+  .attractions-banner h2 {
+    font-size: 1.8rem;
+  }
+
+  .category-item {
+    min-width: 70px;
+    padding: 0.6rem;
+  }
+
+  .category-icon {
+    font-size: 1.2rem;
+  }
+
+  .attraction-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .attraction-description {
+    font-size: 0.9rem;
+  }
+
+  .attractions-grid {
+    padding: 0 0.5rem;
+  }
+
+  .section-header {
+    padding: 0 0.5rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+}

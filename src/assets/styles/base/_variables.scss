@@ -1,0 +1,23 @@
+/* 網站主色系變數 */
+:root {
+  --primary-color: #3a4d39; /* 自然綠色調 */
+  --primary-color-rgb: 58, 77, 57; /* RGB 格式的主色系 */
+  --primary-light: #739072;
+  --primary-light-rgb: 115, 144, 114;
+  --primary-dark: #2c3c2b;
+  --primary-dark-rgb: 44, 60, 43;
+  --secondary-color: #f8f9fa;
+  --accent-color: #ece3ce; /* 米色點綴 */
+  --accent-color-rgb: 236, 227, 206;
+  --text-color: #333;
+  --text-light: #7f8c8d;
+  --white: #ffffff;
+  --black: #000000;
+  --gray-light: #f9f9f9;
+  --gray: #eee;
+  --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  --transition: all 0.3s ease;
+}
+
+// 字體變數
+$font-serif: 'Playfair Display', serif; // 襯線字體，用於標題

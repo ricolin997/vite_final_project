@@ -1,0 +1,17 @@
+/**********************************
+ * reset樣式
+ **********************************/
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.home {
+  font-family: 'Nunito Sans', 'Noto Sans TC', sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+  will-change: transform; /* 提示瀏覽器優化滑動效能 */
+}
