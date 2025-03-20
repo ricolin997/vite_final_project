@@ -1,0 +1,74 @@
+/* PaymentButton 元件樣式 */
+.pay-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  /* 當有 btn btn-primary 類時，使用Bootstrap 風格 */
+  &.btn.btn-primary {
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    background-color: var(--primary-color, #3a4d39);
+    border-color: var(--primary-color, #3a4d39);
+
+    &:hover:not(:disabled) {
+      background-color: var(--primary-dark, #2c3c2b);
+      border-color: var(--primary-dark, #2c3c2b);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(58, 77, 57, 0.3);
+    }
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+
+    &:before {
+      left: 100%;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  .fa-spinner {
+    margin-right: 5px;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,375 @@
+/**********************************
+ * ProductModal 商品編輯模態框樣式
+ **********************************/
+
+.product-modal {
+  .modal-backdrop {
+    background-color: rgba(44, 62, 80, 0.85);
+    backdrop-filter: blur(3px);
+  }
+
+  .modal-dialog {
+    max-width: 1000px;
+    margin: 1.75rem auto;
+    transition: transform 0.3s ease-out;
+  }
+
+  .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+  .modal-header {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #fff;
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #3498db, #2ecc71);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: '\f067'; // 加號圖標
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-right: 10px;
+        font-size: 1.2rem;
+      }
+
+      &.edit-mode::before {
+        content: '\f044'; // 編輯圖標
+      }
+    }
+
+    .btn-close {
+      color: #fff;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+      background: transparent
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e")
+        center/1em auto no-repeat;
+
+      &:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 2rem;
+    background-color: #f8f9fa;
+
+    .form-label {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-control {
+      border-radius: 6px;
+      border: 1px solid #e9ecef;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+      box-shadow: none;
+
+      &:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+      }
+
+      &::placeholder {
+        color: #b2bec3;
+      }
+    }
+
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .image-preview-container {
+      margin-top: 1rem;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .no-image {
+        width: 100%;
+        height: 200px;
+        background-color: #ecf0f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        border-radius: 8px;
+      }
+    }
+
+    .multi-image-container {
+      margin-top: 2rem;
+
+      .section-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 1.1rem;
+      }
+
+      .image-item {
+        margin-bottom: 1.5rem;
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        padding: 1rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+          margin-bottom: 0.5rem;
+        }
+
+        .btn-remove {
+          background-color: rgba(231, 76, 60, 0.1);
+          color: #e74c3c;
+          border: none;
+          border-radius: 6px;
+          padding: 0.5rem 1rem;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          margin-left: 0.5rem;
+
+          &:hover {
+            background-color: #e74c3c;
+            color: #fff;
+          }
+
+          i {
+            margin-right: 5px;
+          }
+        }
+
+        .preview-image {
+          margin-top: 0.5rem;
+          border-radius: 6px;
+          overflow: hidden;
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: scale(1.02);
+          }
+
+          img {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+          }
+        }
+      }
+
+      .btn-add-image {
+        background-color: rgba(52, 152, 219, 0.1);
+        color: #3498db;
+        border: 1px dashed #3498db;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background-color: #3498db;
+          color: #fff;
+        }
+
+        i {
+          margin-right: 8px;
+        }
+      }
+
+      .file-upload-container {
+        margin-top: 1.5rem;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+
+        .form-label {
+          display: flex;
+          align-items: center;
+          color: #2c3e50;
+
+          i {
+            margin-left: 8px;
+            color: #3498db;
+          }
+        }
+
+        .form-control {
+          padding: 0.75rem;
+          background-color: #f8f9fa;
+          border: 1px dashed #bdc3c7;
+
+          &:hover {
+            border-color: #3498db;
+          }
+        }
+      }
+    }
+
+    .form-check {
+      margin-top: 1rem;
+
+      .form-check-input {
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-top: 0.15rem;
+        cursor: pointer;
+
+        &:checked {
+          background-color: #2ecc71;
+          border-color: #2ecc71;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+        }
+      }
+
+      .form-check-label {
+        font-weight: 500;
+        color: #2c3e50;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cancel {
+      background-color: #ecf0f1;
+      color: #7f8c8d;
+      border: none;
+
+      &:hover {
+        background-color: #bdc3c7;
+        color: #2c3e50;
+      }
+    }
+
+    .btn-save {
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+
+      &:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+    }
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 992px) {
+  .product-modal {
+    .modal-dialog {
+      max-width: 90%;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .product-modal {
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1.25rem 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .product-modal {
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+
+      .modal-title {
+        font-size: 1.3rem;
+      }
+    }
+
+    .modal-body {
+      padding: 1.25rem;
+    }
+
+    .modal-footer {
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+}

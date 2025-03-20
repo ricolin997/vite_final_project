@@ -1,0 +1,228 @@
+/**********************************
+ * CouponModal 優惠券模態框樣式
+ **********************************/
+
+.coupon-modal {
+  .modal-backdrop {
+    background-color: rgba(44, 62, 80, 0.85);
+    backdrop-filter: blur(3px);
+  }
+
+  .modal-dialog {
+    max-width: 550px;
+    margin: 1.75rem auto;
+    transition: transform 0.3s ease-out;
+  }
+
+  .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+  .modal-header {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: #fff;
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #9b59b6, #e74c3c);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: '\f145'; // 優惠券圖標
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-right: 10px;
+        font-size: 1.2rem;
+      }
+    }
+
+    .btn-close {
+      color: #fff;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+      background: transparent
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e")
+        center/1em auto no-repeat;
+
+      &:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 2rem;
+    background-color: #f8f9fa;
+
+    .form-label {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-control {
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+      background-color: #fff;
+      color: #2c3e50;
+      box-shadow: none;
+
+      &:focus {
+        border-color: #9b59b6;
+        box-shadow: 0 0 0 0.2rem rgba(155, 89, 182, 0.15);
+      }
+    }
+
+    input[type='number'].form-control {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 500;
+      color: #e74c3c;
+    }
+
+    input[type='date'].form-control {
+      font-family: 'Roboto Mono', monospace;
+      color: #3498db;
+    }
+
+    .form-check {
+      margin-top: 1.5rem;
+      padding-left: 2rem;
+
+      .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-top: 0.15rem;
+        margin-left: -2rem;
+        border: 1px solid #bdc3c7;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+
+        &:checked {
+          background-color: #2ecc71;
+          border-color: #2ecc71;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.15);
+        }
+      }
+
+      .form-check-label {
+        font-weight: 500;
+        color: #2c3e50;
+        padding-left: 0.25rem;
+      }
+    }
+
+    .mb-3 {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .btn-primary {
+      background-color: #9b59b6;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #8e44ad;
+        transform: translateY(-2px);
+        box-shadow: 0 3px 8px rgba(155, 89, 182, 0.3);
+      }
+    }
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .coupon-modal {
+    .modal-dialog {
+      max-width: 90%;
+      margin: 1rem auto;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1.25rem 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .coupon-modal {
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+
+      .modal-title {
+        font-size: 1.3rem;
+      }
+    }
+
+    .modal-body {
+      padding: 1.25rem;
+    }
+
+    .modal-footer {
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .btn-secondary,
+      .btn-primary {
+        width: 100%;
+      }
+    }
+  }
+}

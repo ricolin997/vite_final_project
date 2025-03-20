@@ -1,0 +1,937 @@
+/**********************************
+ * facilities.vue 設施與服務樣式
+ **********************************/
+
+/* 基礎容器優化 */
+.facilities-page {
+  contain: content;
+  overflow-x: hidden;
+}
+
+/* 設施 Banner頂部橫幅 */
+.facilities-banner {
+  height: 40vh;
+  min-height: 400px;
+  background-image: url('@/assets/images/facilities/facilities_banner.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.facilities-banner .banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+  z-index: 1;
+}
+
+.facilities-banner .banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.facilities-banner h2 {
+  font-size: 3.5rem;
+  font-weight: 350;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.facilities-banner p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+}
+
+/* 核心設施與服務區塊樣式 */
+.core-services-section {
+  padding: 5rem 0;
+  background-color: var(--white);
+  position: relative;
+}
+
+.core-services-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(170, 169, 169);
+  opacity: 0.05;
+  z-index: 0;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.service-item {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.service-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.service-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.service-item:hover::before {
+  transform: translateY(0);
+}
+
+.service-icon {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.service-item:hover .service-icon {
+  transform: scale(1.1);
+}
+
+.service-item h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--primary-dark);
+}
+
+.service-item p {
+  color: var(--text-light);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* 設施導航列優化 */
+.facilities-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 4rem;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style;
+}
+
+.facility-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: var(--white);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 120px;
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style;
+}
+
+.facility-nav-item::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+
+.facility-nav-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.facility-nav-item:hover::before {
+  transform: scaleX(1);
+}
+
+.facility-nav-item.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.facility-nav-item.active::before {
+  transform: scaleX(1);
+  background-color: var(--accent-color);
+}
+
+.nav-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.facility-nav-item.active .nav-icon {
+  color: var(--white);
+}
+
+.facility-nav-item span {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* 設施內容優化 */
+.facility-showcase {
+  margin-top: 2rem;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.facility-hero {
+  position: relative;
+  height: 50vh;
+  min-height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.facility-hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.05);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+.facility-hero-image.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.facility-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7));
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.facility-hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 3rem;
+  color: var(--white);
+  z-index: 2;
+}
+
+.facility-hero-icon {
+  width: 80px;
+  height: 80px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.facility-hero-content h3 {
+  font-size: 3rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.facility-hero-meta {
+  display: flex;
+  gap: 2rem;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.facility-hero-meta span {
+  display: flex;
+  align-items: center;
+}
+
+.facility-hero-meta i {
+  margin-right: 0.5rem;
+}
+
+.facility-content-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  margin-bottom: 4rem;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style;
+}
+
+.facility-main-content {
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+}
+
+.facility-description {
+  margin-bottom: 3rem;
+}
+
+.facility-main-content h4 {
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.facility-main-content h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--accent-color);
+}
+
+.facility-description p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+}
+
+.facility-features-grid {
+  margin-bottom: 3rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background-color: var(--gray-light);
+  border-radius: 8px;
+  padding: 2rem;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.feature-content h5 {
+  font-size: 1.3rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.feature-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+.facility-details-section {
+  margin-bottom: 3rem;
+}
+
+.facility-details-section:last-child {
+  margin-bottom: 0;
+}
+
+/* 開放時間樣式 */
+.time-table {
+  background-color: var(--gray-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.time-row:last-child {
+  border-bottom: none;
+}
+
+.time-row .day {
+  font-weight: 500;
+  color: var(--primary-dark);
+}
+
+.time-row .time {
+  color: var(--text-light);
+}
+
+/* 預約信息樣式 */
+.booking-methods {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+}
+
+.booking-methods li {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--gray-light);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.booking-methods li:last-child {
+  margin-bottom: 0;
+}
+
+.booking-methods li:hover {
+  transform: translateX(10px);
+  background-color: var(--primary-light);
+  color: var(--white);
+}
+
+.booking-methods li i {
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  color: var(--white);
+  transition: all 0.3s ease;
+}
+
+.booking-methods li:hover i {
+  background-color: var(--white);
+  color: var(--primary-color);
+}
+
+.facility-side-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.facility-gallery h4,
+.related-facilities h4 {
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.facility-gallery h4::after,
+.related-facilities h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background-color: var(--accent-color);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.gallery-item {
+  height: 150px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 150px;
+}
+
+.gallery-item:hover {
+  transform: scale(1.02);
+}
+
+.related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  contain: layout style;
+}
+
+.related-item {
+  display: flex;
+  align-items: center;
+  padding: 1.2rem;
+  background-color: var(--gray-light);
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style;
+}
+
+.related-item:hover {
+  transform: translateX(10px);
+  background-color: var(--primary-light);
+  color: var(--white);
+}
+
+.related-icon {
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  margin-right: 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.related-item:hover .related-icon {
+  background-color: var(--white);
+  color: var(--primary-color);
+}
+
+.related-item span {
+  font-weight: 500;
+}
+
+/* 預約服務區塊 */
+.booking-services {
+  padding: 5rem 0;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('@/assets/images/facilities/booking_banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--white);
+  text-align: center;
+}
+
+.booking-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.booking-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+
+.booking-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.booking-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.booking-buttons .btn {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 4px;
+}
+
+/* 響應式設計優化 */
+@media (max-width: 1400px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .facility-content-wrapper {
+    gap: 2rem;
+  }
+
+  .facility-hero-content h3 {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .facility-content-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .facility-gallery {
+    order: -1;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .related-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .facility-hero {
+    height: 45vh;
+  }
+}
+
+@media (max-width: 992px) {
+  .facilities-banner {
+    height: 35vh;
+    min-height: 350px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .facilities-nav {
+    gap: 0.8rem;
+  }
+
+  .facility-nav-item {
+    width: 100px;
+    padding: 1.2rem;
+  }
+
+  .nav-icon {
+    font-size: 1.8rem;
+  }
+
+  .facility-hero-content {
+    padding: 2rem;
+  }
+
+  .facility-hero-content h3 {
+    font-size: 2.5rem;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .related-list {
+    grid-template-columns: 1fr;
+  }
+
+  .facility-main-content {
+    padding: 2rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .facilities-banner {
+    height: 30vh;
+    min-height: 300px;
+  }
+  .banner-content {
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0;
+    }
+    p {
+      display: none;
+    }
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .core-services-section {
+    padding: 3rem 0;
+  }
+
+  .service-item {
+    padding: 2rem 1.5rem;
+  }
+
+  .facilities-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 2rem -1rem 3rem;
+    contain: layout style;
+  }
+
+  .facilities-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .facility-nav-item {
+    flex-shrink: 0;
+    width: 90px;
+    padding: 1rem;
+  }
+
+  .nav-icon {
+    font-size: 1.6rem;
+  }
+
+  .facility-hero {
+    height: 40vh;
+    margin: 0 -1rem 2rem;
+    border-radius: 0;
+    contain: layout style paint;
+  }
+
+  .facility-hero-content {
+    padding: 1.5rem;
+  }
+
+  .facility-hero-content h3 {
+    font-size: 2rem;
+  }
+
+  .facility-hero-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .facility-main-content {
+    padding: 1.5rem;
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+
+  .booking-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .time-table {
+    margin: 1rem -1rem;
+    border-radius: 0;
+  }
+
+  .booking-methods li {
+    margin: 0 -1rem 1rem;
+    border-radius: 0;
+  }
+
+  .facility-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    contain: layout style;
+  }
+}
+
+@media (max-width: 576px) {
+  .facilities-banner {
+    height: 30vh;
+    min-height: 250px;
+  }
+
+  .facilities-banner h2 {
+    font-size: 2rem;
+  }
+
+  .service-item {
+    padding: 1.5rem 1rem;
+  }
+
+  .service-icon {
+    font-size: 2.5rem;
+  }
+
+  .service-item h3 {
+    font-size: 1.2rem;
+  }
+
+  .facility-hero-content h3 {
+    font-size: 1.8rem;
+  }
+
+  .facility-main-content h4 {
+    font-size: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.2rem;
+  }
+
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+
+  .feature-content h5 {
+    font-size: 1.1rem;
+  }
+
+  .gallery-item {
+    height: 120px;
+  }
+
+  .booking-content h2 {
+    font-size: 2rem;
+  }
+
+  .booking-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .facilities-banner {
+    height: 25vh;
+    min-height: 200px;
+  }
+
+  .banner-content h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* 效能優化 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
