@@ -6,6 +6,11 @@
 .gallery-page {
   background-color: var(--white);
   color: var(--text-color);
+  
+  &.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
 }
 
 /* 頂部橫幅 */
@@ -266,19 +271,6 @@
   .filter-item span {
     font-size: 0.9rem;
   }
-}
-
-/* 舊的相簿導航樣式保留但不使用 */
-.gallery-nav {
-  display: none;
-}
-
-.gallery-nav-item {
-  display: none;
-}
-
-.gallery-nav-icon {
-  display: none;
 }
 
 /* 相簿內容 */

@@ -6,6 +6,12 @@
 .attractions-page {
   background-color: var(--white);
   color: var(--text-color);
+  
+  /* 防止當彈窗開啟時背景滾動 */
+  &.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
 }
 
 /* 頂部橫幅 */

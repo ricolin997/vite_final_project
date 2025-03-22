@@ -265,194 +265,209 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from '@/stores'
 import { useRouter } from 'vue-router'
 
-export default {
-  setup() {
-    const store = useStore()
-    const router = useRouter()
-    const isLoading = ref(false)
-    const errorMessage = ref('')
-    const paymentMethod = ref('credit')
 
-    const orderData = ref({
-      name: '',
-      email: '',
-      tel: '',
-      address: '',
-      message: ''
-    })
+const store = useStore()
+const router = useRouter()
+const isLoading = ref(false)
+const errorMessage = ref('')
+const paymentMethod = ref('credit')
 
-    const cardInfo = ref({
-      number: '',
-      name: '',
-      expiry: '',
-      cvv: ''
-    })
+// 訂單基本資料
+const orderData = ref({
+  name: '',
+  email: '',
+  tel: '',
+  address: '',
+  message: ''
+})
 
-    const cart = computed(() => store.cart || [])
+// 信用卡資料
+const cardInfo = ref({
+  number: '',
+  name: '',
+  expiry: '',
+  cvv: ''
+})
 
-    // 使用 store.cartTotal 代替自行計算
-    const cartTotal = computed(() => store.cartTotal || 0)
+// 購物車數據
+const cart = computed(() => store.cart || [])
+const cartTotal = computed(() => store.cartTotal || 0)
 
-    // 計算商品小計（不含稅）
-    const subtotal = computed(() => {
-      // 使用 store.cartTotal 作為含稅總價，稅率為 5%
-      return Math.round(cartTotal.value / 1.05)
-    })
+// 計算商品小計（不含稅）
+const subtotal = computed(() => {
+  return Math.round(cartTotal.value / 1.05)
+})
 
-    // 計算稅金
-    const tax = computed(() => {
-      return cartTotal.value - subtotal.value
-    })
+// 計算稅金
+const tax = computed(() => {
+  return cartTotal.value - subtotal.value
+})
 
-    // 優惠碼相關
-    const discount = ref(0)
-    const originalTotal = ref(0)
+// 優惠碼相關
+const discount = ref(0)
+const originalTotal = ref(0)
 
-    const finalTotal = computed(() => {
-      return cartTotal.value - discount.value
-    })
+const finalTotal = computed(() => {
+  return cartTotal.value - discount.value
+})
 
-    const formatCardNumber = () => {
-      // 移除所有非數字字符
-      let value = cardInfo.value.number.replace(/\D/g, '')
-      // 每4位數字後添加空格
-      let formattedValue = ''
-      for (let i = 0; i < value.length; i++) {
-        if (i > 0 && i % 4 === 0) {
-          formattedValue += ' '
-        }
-        formattedValue += value[i]
-      }
-      cardInfo.value.number = formattedValue
+/**
+ * 格式化信用卡卡號
+ * 每4位數字後添加空格
+ */
+const formatCardNumber = () => {
+  // 移除所有非數字字符
+  let value = cardInfo.value.number.replace(/\D/g, '')
+  // 每4位數字後添加空格
+  let formattedValue = ''
+  for (let i = 0; i < value.length; i++) {
+    if (i > 0 && i % 4 === 0) {
+      formattedValue += ' '
+    }
+    formattedValue += value[i]
+  }
+  cardInfo.value.number = formattedValue
+}
+
+/**
+ * 格式化信用卡有效期限
+ * 格式化為 MM/YY
+ */
+const formatCardExpiry = () => {
+  // 移除所有非數字字符
+  let value = cardInfo.value.expiry.replace(/\D/g, '')
+  // 格式化為 MM/YY
+  if (value.length > 2) {
+    cardInfo.value.expiry = value.substring(0, 2) + '/' + value.substring(2)
+  } else {
+    cardInfo.value.expiry = value
+  }
+}
+
+/**
+ * 格式化價格顯示，加上千分位逗號
+ * @param {Number} price - 價格
+ * @returns {String} - 格式化後的價格字串
+ */
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+/**
+ * 驗證訂單輸入是否完整
+ * @returns {Object} - 包含驗證結果和錯誤訊息
+ */
+const validateOrderInput = () => {
+  // 驗證購物車是否為空
+  if (!cart.value || cart.value.length === 0) {
+    return { valid: false, errorMsg: '購物車是空的，請先添加商品' }
+  }
+
+  // 驗證基本訂單資料
+  if (
+    !orderData.value.name ||
+    !orderData.value.email ||
+    !orderData.value.tel ||
+    !orderData.value.address
+  ) {
+    return { valid: false, errorMsg: '請填寫所有必填欄位' }
+  }
+
+  // 信用卡付款方式驗證
+  if (paymentMethod.value === 'credit') {
+    if (
+      !cardInfo.value.number ||
+      !cardInfo.value.name ||
+      !cardInfo.value.expiry ||
+      !cardInfo.value.cvv
+    ) {
+      return { valid: false, errorMsg: '請填寫完整的信用卡資訊' }
+    }
+  }
+
+  return { valid: true, errorMsg: '' }
+}
+
+/**
+ * 提交訂單
+ */
+const submitOrder = async () => {
+  errorMessage.value = ''
+  isLoading.value = true
+
+  try {
+    // 驗證輸入
+    const { valid, errorMsg } = validateOrderInput()
+    if (!valid) {
+      throw new Error(errorMsg)
     }
 
-    const formatCardExpiry = () => {
-      // 移除所有非數字字符
-      let value = cardInfo.value.expiry.replace(/\D/g, '')
-      // 格式化為 MM/YY
-      if (value.length > 2) {
-        cardInfo.value.expiry = value.substring(0, 2) + '/' + value.substring(2)
-      } else {
-        cardInfo.value.expiry = value
-      }
+    // 添加付款方式到訂單資料
+    const orderDataWithPayment = {
+      ...orderData.value,
+      paymentMethod: paymentMethod.value
     }
 
-    const formatPrice = (price) => {
-      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    // 呼叫結帳 API
+    const response = await store.createOrder(orderDataWithPayment)
+
+    if (!response || !response.orderId) {
+      throw new Error('訂單建立失敗，請重試')
     }
 
-    const submitOrder = async () => {
-      errorMessage.value = ''
-      isLoading.value = true
-
-      try {
-        // 驗證購物車是否為空
-        if (!cart.value || cart.value.length === 0) {
-          throw new Error('購物車是空的，請先添加商品')
-        }
-
-        // 驗證輸入
-        if (
-          !orderData.value.name ||
-          !orderData.value.email ||
-          !orderData.value.tel ||
-          !orderData.value.address
-        ) {
-          throw new Error('請填寫所有必填欄位')
-        }
-
-        // 信用卡付款方式驗證
-        if (paymentMethod.value === 'credit') {
-          if (
-            !cardInfo.value.number ||
-            !cardInfo.value.name ||
-            !cardInfo.value.expiry ||
-            !cardInfo.value.cvv
-          ) {
-            throw new Error('請填寫完整的信用卡資訊')
-          }
-        }
-
-        // 添加付款方式到訂單資料
-        const orderDataWithPayment = {
-          ...orderData.value,
-          paymentMethod: paymentMethod.value
-        }
-
-        // 呼叫結帳 API
-        const response = await store.createOrder(orderDataWithPayment)
-
-        if (!response || !response.orderId) {
-          throw new Error('訂單建立失敗，請重試')
-        }
-
-        // 跳轉到訂單成功頁面
-        router.push({
-          path: '/user/order-success',
-          query: { orderId: response.orderId }
-        })
-      } catch (error) {
-        console.error('訂單建立失敗：', error)
-        errorMessage.value = error.message || '訂單建立失敗，請重試'
-      } finally {
-        isLoading.value = false
-      }
-    }
-
-    onMounted(async () => {
-      isLoading.value = true
-      try {
-        // 獲取購物車資料
-        const cartData = await store.getCart()
-
-        // 檢查購物車是否為空
-        if (!cart.value || cart.value.length === 0) {
-          router.push('/user/products')
-          return
-        }
-
-        // 檢查是否有優惠碼套用
-        if (cartData && cartData.final_total !== undefined && cartData.total !== undefined) {
-          // 如果 final_total 小於 total，表示有優惠碼套用
-          if (cartData.final_total < cartData.total) {
-            originalTotal.value = cartData.total
-            discount.value = cartData.total - cartData.final_total
-          }
-        }
-      } catch (error) {
-        console.error('獲取購物車資料失敗：', error)
-        errorMessage.value = '獲取購物車資料失敗'
-        // 導航到產品頁面
-        router.push('/user/products')
-      } finally {
-        isLoading.value = false
-      }
+    // 跳轉到訂單成功頁面
+    router.push({
+      path: '/user/order-success',
+      query: { orderId: response.orderId }
     })
+  } catch (error) {
+    console.error('訂單建立失敗：', error)
+    errorMessage.value = error.message || '訂單建立失敗，請重試'
+  } finally {
+    isLoading.value = false
+  }
+}
 
-    return {
-      isLoading,
-      orderData,
-      cardInfo,
-      errorMessage,
-      paymentMethod,
-      cart,
-      cartTotal,
-      subtotal,
-      tax,
-      discount,
-      originalTotal,
-      finalTotal,
-      formatCardNumber,
-      formatCardExpiry,
-      formatPrice,
-      submitOrder,
-      store
+/**
+ * 處理優惠碼折扣
+ * @param {Object} cartData - 購物車數據
+ */
+const handleDiscount = (cartData) => {
+  if (cartData && cartData.final_total !== undefined && cartData.total !== undefined) {
+    // 如果 final_total 小於 total，表示有優惠碼套用
+    if (cartData.final_total < cartData.total) {
+      originalTotal.value = cartData.total
+      discount.value = cartData.total - cartData.final_total
     }
   }
 }
+
+onMounted(async () => {
+  isLoading.value = true
+  try {
+    // 獲取購物車資料
+    const cartData = await store.getCart()
+
+    // 檢查購物車是否為空
+    if (!cart.value || cart.value.length === 0) {
+      router.push('/user/products')
+      return
+    }
+
+    // 檢查是否有優惠碼套用
+    handleDiscount(cartData)
+  } catch (error) {
+    console.error('獲取購物車資料失敗：', error)
+    errorMessage.value = '獲取購物車資料失敗'
+    // 導航到產品頁面
+    router.push('/user/products')
+  } finally {
+    isLoading.value = false
+  }
+})
 </script>

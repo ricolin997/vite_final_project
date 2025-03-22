@@ -1,5 +1,5 @@
 <template>
-  <div class="attractions-page">
+  <div class="attractions-page" :class="{ 'no-scroll': selectedAttraction }">
     <!-- 頁面頂部橫幅 -->
     <div class="attractions-banner">
       <div class="banner-overlay"></div>
@@ -355,11 +355,9 @@ const getCategoryIcon = (categoryId) => {
 
 const showAttractionDetail = (attraction) => {
   selectedAttraction.value = attraction
-  document.body.style.overflow = 'hidden' // 防止背景滾動
 }
 
 const closeModal = () => {
   selectedAttraction.value = null
-  document.body.style.overflow = '' // 恢復背景滾動
 }
 </script>

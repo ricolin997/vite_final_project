@@ -49,6 +49,7 @@
               v-for="(section, index) in sections"
               :key="index"
               :id="`section-${index}`"
+              :ref="el => { if(el) sectionRefs[index] = el }"
               class="policy-section"
             >
               <h2>{{ section.title }}</h2>
@@ -75,7 +76,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+// 儲存各章節的參考
+const sectionRefs = ref([])
 
 // 隱私政策各章節內容
 const sections = ref([
@@ -236,11 +240,17 @@ const sections = ref([
 
 // 滾動到指定章節
 const scrollToSection = (sectionId) => {
-  const element = document.getElementById(sectionId)
-  if (element) {
+  const index = parseInt(sectionId.split('-')[1])
+  if (sectionRefs.value[index]) {
     const yOffset = -100 // 調整滾動位置的偏移量
+    const element = sectionRefs.value[index]
     const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
     window.scrollTo({ top: y, behavior: 'smooth' })
   }
 }
+
+// 初始化章節參考陣列
+onMounted(() => {
+  sectionRefs.value = new Array(sections.value.length).fill(null)
+})
 </script>

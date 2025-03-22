@@ -35,17 +35,31 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: 'PaginationComponent',
-  props: ['pages'],
-  methods: {
-    updatePage(page) {
-      // 確保只能在有效頁碼範圍內翻頁
-      if (page >= 1 && page <= this.pages.total_pages) {
-        this.$emit('emit-pages', page)
-      }
-    }
+<script setup>
+import { defineProps, defineEmits } from 'vue'
+
+// 添加元件名稱
+defineOptions({
+  name: 'PaginationComponent'
+})
+
+const props = defineProps({
+  pages: {
+    type: Object,
+    required: true
+  }
+})
+
+const emit = defineEmits(['emit-pages'])
+
+/**
+ * 更新頁碼並發送事件
+ * @param {Number} page - 新的頁碼
+ */
+const updatePage = (page) => {
+  // 確保只能在有效頁碼範圍內翻頁
+  if (page >= 1 && page <= props.pages.total_pages) {
+    emit('emit-pages', page)
   }
 }
 </script>

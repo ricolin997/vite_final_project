@@ -36,15 +36,12 @@
   </footer>
 </template>
 
-<script>
-export default {
-  name: 'SiteFooter',
-  computed: {
-    currentYear() {
-      return new Date().getFullYear()
-    }
-  }
-}
+<script setup>
+import { computed } from 'vue'
+
+// 計算當前年份
+const currentYear = computed(() => {
+  return new Date().getFullYear()
+})
 </script>
 
-<style scoped></style>

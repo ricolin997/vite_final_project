@@ -9,7 +9,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">訂單詳細資料</h5>
-            <button type="button" class="btn-close" @click="$emit('close')"></button>
+            <button type="button" class="btn-close" @click="emitClose"></button>
           </div>
           <div class="modal-body">
             <!-- 訂單標頭資訊 -->
@@ -74,7 +74,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn-secondary" @click="$emit('close')">關閉</button>
+            <button type="button" class="btn-secondary" @click="emitClose">關閉</button>
           </div>
         </div>
       </div>
@@ -82,32 +82,34 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    order: {
-      type: Object,
-      required: true
-    }
-  },
-  setup() {
-    const formatDate = (timestamp) => {
-      if (!timestamp) return '無日期資料'
-      const date = new Date(timestamp * 1000)
-      return date.toLocaleDateString('zh-TW', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    }
+<script setup>
+import { defineProps, defineEmits } from 'vue'
 
-    return {
-      formatDate
-    }
+// 定義 props 和 emits
+defineProps({
+  order: {
+    type: Object,
+    required: true
   }
+})
+
+const emit = defineEmits(['close'])
+
+// 格式化日期的函數
+const formatDate = (timestamp) => {
+  if (!timestamp) return '無日期資料'
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+// 統一關閉模態框的方法
+const emitClose = () => {
+  emit('close')
 }
 </script>
-
-<style scoped></style>

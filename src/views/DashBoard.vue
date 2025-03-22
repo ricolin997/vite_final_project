@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
     <!-- 側邊導航欄 -->
     <div class="dashboard-sidebar">
       <div class="sidebar-header">
@@ -45,64 +45,55 @@
   <Toast :autoDismissTime="5000" />
 </template>
 
-<script>
+<script setup>
 import { useStore } from '@/stores/index'
 import { useRouter } from 'vue-router'
 import { onMounted, provide, ref } from 'vue'
 import Toast from '../components/Toast.vue'
 import emitter from '@/methods/emitter'
 
-export default {
-  components: {
-    Toast // 註冊 Toast 元件
-  },
-  setup() {
-    const store = useStore()
-    const router = useRouter()
-    const sidebarCollapsed = ref(false)
+const store = useStore()
+const router = useRouter()
+const sidebarCollapsed = ref(false)
 
-    // 提供 emitter
-    provide('emitter', emitter)
+// 提供 emitter
+provide('emitter', emitter)
 
-    const verifyAuth = async () => {
-      try {
-        const isAuthenticated = await store.checkAuth()
-        if (!isAuthenticated) {
-          router.push('/login')
-        } else {
-          console.log('User is authenticated')
-        }
-      } catch (error) {
-        console.error('Error checking authentication:', error)
-        router.push('/login')
-      }
+// 驗證用戶是否登入
+const verifyAuth = async () => {
+  try {
+    const isAuthenticated = await store.checkAuth()
+    if (!isAuthenticated) {
+      router.push('/login')
+    } else {
+      console.log('User is authenticated')
     }
-
-    const handleLogout = async () => {
-      try {
-        await store.logOut()
-        emitter.emit('show-toast', { style: 'success', title: '已成功登出' })
-        router.push('/login')
-      } catch (error) {
-        console.error('Logout error:', error)
-        emitter.emit('show-toast', { style: 'error', title: '登出失敗', content: error.message })
-      }
-    }
-
-    const toggleSidebar = () => {
-      sidebarCollapsed.value = !sidebarCollapsed.value
-      document.querySelector('.dashboard-container').classList.toggle('sidebar-collapsed')
-    }
-
-    onMounted(async () => {
-      await store.initializeStore() // 確保從 Cookies 讀取 token
-      verifyAuth()
-    })
-
-    return {
-      handleLogout,
-      toggleSidebar
-    }
+  } catch (error) {
+    console.error('Error checking authentication:', error)
+    router.push('/login')
   }
 }
+
+// 處理登出
+const handleLogout = async () => {
+  try {
+    await store.logOut()
+    emitter.emit('show-toast', { style: 'success', title: '已成功登出' })
+    router.push('/login')
+  } catch (error) {
+    console.error('Logout error:', error)
+    emitter.emit('show-toast', { style: 'error', title: '登出失敗', content: error.message })
+  }
+}
+
+// 切換側邊欄收合狀態
+const toggleSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value
+}
+
+// 頁面載入時檢查用戶登入狀態
+onMounted(async () => {
+  await store.initializeStore() // 確保從 Cookies 讀取 token
+  verifyAuth()
+})
 </script>

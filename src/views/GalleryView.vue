@@ -1,5 +1,5 @@
 <template>
-  <div class="gallery-page">
+  <div class="gallery-page" :class="{ 'no-scroll': lightboxOpen }">
     <!-- 頁面頂部橫幅 -->
     <div class="gallery-banner">
       <div class="banner-overlay"></div>
@@ -395,15 +395,11 @@ const getCategoryDescription = (categoryId) => {
 const openLightbox = (index) => {
   currentPhotoIndex.value = index
   lightboxOpen.value = true
-  // 防止背景滾動
-  document.body.style.overflow = 'hidden'
 }
 
 // 關閉照片查看器
 const closeLightbox = () => {
   lightboxOpen.value = false
-  // 恢復背景滾動
-  document.body.style.overflow = ''
 }
 
 // 上一張照片

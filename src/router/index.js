@@ -83,7 +83,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/Login.vue')
+    component: () => import('../views/LoginView.vue')
   },
   {
     path: '/dashboard',
@@ -103,7 +103,7 @@ const routes = [
       {
         path: 'coupons',
         name: 'coupons',
-        component: () => import('../views/Coupons.vue')
+        component: () => import('../views/CouponsView.vue')
       }
     ]
   }

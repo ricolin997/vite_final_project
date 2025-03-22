@@ -37,60 +37,55 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from 'vue'
 
-export default {
-  name: 'DelModal',
-  props: {
-    show: Boolean,
-    item: {
-      type: Object,
-      required: true
-    },
-    entityName: {
-      type: String,
-      default: '項目' // 默認名稱
-    },
-    onDelete: {
-      type: Function,
-      required: true // 刪除行為作為回調傳入
-    }
+// Props 定義
+const props = defineProps({
+  show: Boolean,
+  item: {
+    type: Object,
+    required: true
   },
-  emits: ['close', 'deleted', 'error'],
-  setup(props, { emit }) {
-    const isDeleting = ref(false)
+  entityName: {
+    type: String,
+    default: '項目' // 默認名稱
+  },
+  onDelete: {
+    type: Function,
+    required: true // 刪除行為作為回調傳入
+  }
+})
 
-    const itemTitle = computed(() => {
-      if (props.item.title) return props.item.title
-      if (props.item.user && props.item.user.name) return props.item.user.name
-      return '此'
-    })
+// 定義事件
+const emit = defineEmits(['close', 'deleted', 'error'])
 
-    const closeModal = () => {
-      emit('close')
-    }
+// 狀態
+const isDeleting = ref(false)
 
-    const confirmDelete = async () => {
-      isDeleting.value = true
-      try {
-        await props.onDelete(props.item.id)
-        emit('deleted') // 通知父層刪除成功
-      } catch (error) {
-        emit('error', error.message || '刪除失敗')
-      } finally {
-        isDeleting.value = false
-      }
-    }
+// 計算項目標題
+const itemTitle = computed(() => {
+  if (props.item.title) return props.item.title
+  if (props.item.user && props.item.user.name) return props.item.user.name
+  return '此'
+})
 
-    return {
-      closeModal,
-      confirmDelete,
-      isDeleting,
-      itemTitle
-    }
+// 關閉模態框
+const closeModal = () => {
+  emit('close')
+}
+
+// 確認刪除
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await props.onDelete(props.item.id)
+    emit('deleted') // 通知父層刪除成功
+  } catch (error) {
+    emit('error', error.message || '刪除失敗')
+  } finally {
+    isDeleting.value = false
   }
 }
 </script>
 
-<style scoped></style>

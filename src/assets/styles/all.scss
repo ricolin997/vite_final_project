@@ -11,6 +11,7 @@
 @import './base/_utilities.scss';
 
 // 引入 layout 樣式
+@import './layout/frontlayout.scss';
 @import './layout/navbar.scss';
 @import './layout/footer.scss';
 
@@ -33,7 +34,7 @@
 
 //後台
 @import './dashboard/dashboard.scss';
-@import './dashboard/login.scss';
+@import './dashboard/loginview.scss';
 @import './views/productsview.scss';
 @import './views/ordersview.scss';
 @import './views/couponsview.scss';

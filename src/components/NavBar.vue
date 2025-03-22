@@ -54,129 +54,105 @@
   </nav>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/stores'
 
-export default {
-  name: 'NavBar',
-  setup() {
-    const store = useStore()
+// 引入必要的依賴
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
 
-    return {
-      store
-    }
-  },
-  data() {
-    return {
-      isScrolled: false,
-      isMenuOpen: false
-    }
-  },
-  computed: {
-    isHomePage() {
-      return this.$route.path === '/'
-    },
-    isProductsPage() {
-      return this.$route.path.includes('/user/products')
-    },
-    isFacilitiesPage() {
-      return this.$route.path === '/facilities'
-    },
-    isAttractionsPage() {
-      return this.$route.path === '/attractions'
-    },
-    isGalleryPage() {
-      return this.$route.path === '/gallery'
-    },
-    isMemberPage() {
-      return this.$route.path.includes('/user/member')
-    },
-    cartItemCount() {
-      // 從 store 獲取購物車數量
-      return this.store?.cart?.length || 0
-    }
-  },
-  watch: {
-    // 監聽路由變化
-    $route() {
-      // 路由變化時重新檢查滾動狀態
-      this.handleScroll()
-      // 路由變化時關閉選單
-      if (this.isMenuOpen) {
-        this.closeMenu()
-      }
-    },
-    // 監聽購物車數據變化
-    'store.cart': {
-      handler() {
-        // 購物車數據變化時，強制更新 cartItemCount
-        this.$forceUpdate()
-      },
-      deep: true
-    }
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-    // 初始化時立即檢查滾動狀態
-    this.handleScroll()
+// 狀態
+const isScrolled = ref(false)
+const isMenuOpen = ref(false)
 
-    // 添加ESC鍵關閉選單
-    document.addEventListener('keydown', this.handleKeyDown)
+// 計算屬性
+const isHomePage = computed(() => route.path === '/')
+const isProductsPage = computed(() => route.path.includes('/user/products'))
+const isFacilitiesPage = computed(() => route.path === '/facilities')
+const isAttractionsPage = computed(() => route.path === '/attractions')
+const isGalleryPage = computed(() => route.path === '/gallery')
+const isMemberPage = computed(() => route.path.includes('/user/member'))
+const cartItemCount = computed(() => store?.cart?.length || 0)
 
-    // 確保購物車數據已加載
-    this.loadCartData()
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll)
-    document.removeEventListener('keydown', this.handleKeyDown)
-  },
-  methods: {
-    // 加載購物車數據
-    async loadCartData() {
-      try {
-        await this.store.getCart()
-      } catch (error) {
-        console.error('獲取購物車數據失敗：', error)
-      }
-    },
-    handleScroll() {
-      // 當滾動超過100px時，添加scrolled類
-      this.isScrolled = window.scrollY > 100
-    },
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen
-      // 當選單打開時，禁止背景滾動
-      if (this.isMenuOpen) {
-        document.body.style.overflow = 'hidden'
-      } else {
-        document.body.style.overflow = ''
-      }
-    },
-    closeMenu() {
-      this.isMenuOpen = false
-      document.body.style.overflow = ''
-    },
-    handleKeyDown(e) {
-      // 按ESC鍵關閉選單
-      if (e.key === 'Escape' && this.isMenuOpen) {
-        this.closeMenu()
-      }
-    },
-    goToHome() {
-      // 如果不在首頁，則導航到首頁
-      if (!this.isHomePage) {
-        this.$router.push('/')
-      } else {
-        // 如果已經在首頁，則手動滾動到頂部
-        window.scrollTo(0, 0)
-        document.documentElement.scrollTop = 0
-        document.body.scrollTop = 0
-      }
-      // 如果選單是打開的，則關閉選單
-      if (this.isMenuOpen) {
-        this.closeMenu()
-      }
-    }
+// 加載購物車數據
+const loadCartData = async () => {
+  try {
+    await store.getCart()
+  } catch (error) {
+    console.error('獲取購物車數據失敗：', error)
   }
 }
+
+// 處理滾動事件
+const handleScroll = () => {
+  // 當滾動超過100px時，添加scrolled類
+  isScrolled.value = window.scrollY > 100
+}
+
+// 切換菜單
+const toggleMenu = (forceClose = false) => {
+  if (forceClose) {
+    isMenuOpen.value = false
+  } else {
+    isMenuOpen.value = !isMenuOpen.value
+  }
+  
+  // 控制背景滾動
+  document.body.style.overflow = isMenuOpen.value ? 'hidden' : ''
+}
+
+// 處理ESC鍵關閉選單
+const handleKeyDown = (e) => {
+  // 按ESC鍵關閉選單
+  if (e.key === 'Escape' && isMenuOpen.value) {
+    toggleMenu(true)
+  }
+}
+
+// 前往首頁
+const goToHome = () => {
+  // 如果不在首頁，則導航到首頁
+  if (!isHomePage.value) {
+    router.push('/')
+  } else {
+    // 如果已經在首頁，則手動滾動到頂部
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  // 如果選單是打開的，則關閉選單
+  if (isMenuOpen.value) {
+    toggleMenu(true)
+  }
+}
+
+// 監聽路由變化
+watch(route, () => {
+  // 路由變化時重新檢查滾動狀態
+  handleScroll()
+  // 路由變化時關閉選單
+  if (isMenuOpen.value) {
+    toggleMenu(true)
+  }
+})
+
+// 掛載時的設置
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  // 初始化時立即檢查滾動狀態
+  handleScroll()
+
+  // 添加ESC鍵關閉選單
+  document.addEventListener('keydown', handleKeyDown)
+
+  // 確保購物車數據已加載
+  loadCartData()
+})
+
+// 卸載前的清理
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+  document.removeEventListener('keydown', handleKeyDown)
+})
 </script>

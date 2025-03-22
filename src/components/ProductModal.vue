@@ -181,108 +181,125 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, watch } from 'vue'
 import axios from 'axios'
-export default {
-  props: {
-    product: {
-      type: Object,
-      required: true,
-      default: () => ({
-        title: '',
-        category: '',
-        origin_price: 0,
-        price: 0,
-        unit: '',
-        description: '',
-        content: '',
-        is_enabled: 1,
-        imageUrl: '',
-        imagesUrl: []
-      })
-    }
-  },
-  data() {
-    return {
-      productCopy: {
-        ...this.product,
-        imagesUrl: this.product.imagesUrl.length
-          ? [...this.product.imagesUrl]
-          : ['', '', '', '', ''] // 如果沒有圖片網址，初始化為五個空欄位
-      },
-      isUploading: false
-    }
-  },
-  watch: {
-    product: {
-      handler(newValue) {
-        this.productCopy = {
-          ...newValue,
-          imagesUrl: newValue.imagesUrl.length ? [...newValue.imagesUrl] : ['', '', '', '', ''] // 確保有五個欄位
-        }
-      },
-      deep: true,
-      immediate: true
-    }
-  },
-  methods: {
-    closeModal() {
-      this.$emit('close')
-    },
-    saveProduct() {
-      this.$emit('save', this.productCopy) // 傳遞修改後的 productCopy 給父組件
-    },
-    addImage() {
-      if (this.productCopy.imagesUrl.length < 5) {
-        this.productCopy.imagesUrl.push('') // 修改本地的 productCopy
-      }
-    },
-    removeImage(index) {
-      this.productCopy.imagesUrl.splice(index, 1) // 修改本地的 productCopy
-    },
-    async uploadFile(event) {
-      const file = event.target.files[0] // 獲取選中的檔案
-      if (!file) return // 如果沒有選擇檔案，則返回
 
-      this.isUploading = true // 開始上傳
-      const formData = new FormData()
-      formData.append('file-to-upload', file) // 將檔案添加到 FormData
+defineOptions({
+  name: 'ProductModal'
+})
 
-      try {
-        const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/upload`
-        const response = await axios.post(api, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data' // 設定正確的標頭
-          }
-        })
-        // 假設返回的 response.data 包含圖片的 URL
-        this.productCopy.imageUrl = response.data.imageUrl || response.data.url // 更新圖片網址
-        console.log('上傳成功:', response.data)
-      } catch (error) {
-        console.error('圖片上傳失敗:', error)
-      } finally {
-        this.isUploading = false // 結束上傳
-        // 清空檔案輸入框，以便可以再次選擇同一個檔案
-        if (this.$refs.fileInput) {
-          this.$refs.fileInput.value = ''
-        }
+// 定義 props
+const props = defineProps({
+  product: {
+    type: Object,
+    required: true,
+    default: () => ({
+      title: '',
+      category: '',
+      origin_price: 0,
+      price: 0,
+      unit: '',
+      description: '',
+      content: '',
+      is_enabled: 1,
+      imageUrl: '',
+      imagesUrl: []
+    })
+  }
+})
+
+// 定義事件
+const emit = defineEmits(['close', 'save'])
+
+// 初始化空欄位數量
+const EMPTY_IMAGE_SLOTS = 5
+
+/**
+ * 初始化產品圖片數組
+ * @param {Array} images - 原始圖片數組
+ * @returns {Array} - 處理後的圖片數組
+ */
+const initImagesUrl = (images) => {
+  return images.length ? [...images] : Array(EMPTY_IMAGE_SLOTS).fill('')
+}
+
+// 狀態
+const isUploading = ref(false)
+const fileInput = ref(null)
+const productCopy = reactive({
+  ...props.product,
+  imagesUrl: initImagesUrl(props.product.imagesUrl)
+})
+
+// 監聽產品變化
+watch(() => props.product, (newValue) => {
+  Object.assign(productCopy, {
+    ...newValue,
+    imagesUrl: initImagesUrl(newValue.imagesUrl)
+  })
+}, { deep: true })
+
+/**
+ * 關閉模態框
+ */
+const closeModal = () => {
+  emit('close')
+}
+
+/**
+ * 保存產品
+ */
+const saveProduct = () => {
+  emit('save', productCopy)
+}
+
+/**
+ * 新增內容圖片
+ */
+const addImage = () => {
+  if (productCopy.imagesUrl.length < EMPTY_IMAGE_SLOTS) {
+    productCopy.imagesUrl.push('')
+  }
+}
+
+/**
+ * 移除內容圖片
+ * @param {number} index - 要移除的圖片索引
+ */
+const removeImage = (index) => {
+  productCopy.imagesUrl.splice(index, 1)
+}
+
+/**
+ * 上傳檔案
+ * @param {Event} event - 檔案上傳事件
+ */
+const uploadFile = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  isUploading.value = true
+  const formData = new FormData()
+  formData.append('file-to-upload', file)
+
+  try {
+    const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/upload`
+    const response = await axios.post(api, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
+    })
+    productCopy.imageUrl = response.data.imageUrl || response.data.url
+    console.log('上傳成功:', response.data)
+  } catch (error) {
+    console.error('圖片上傳失敗:', error)
+  } finally {
+    isUploading.value = false
+    if (fileInput.value) {
+      fileInput.value.value = ''
     }
   }
 }
 </script>
 
-<style scoped>
-.spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-</style>

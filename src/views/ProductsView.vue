@@ -81,148 +81,138 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, inject } from 'vue'
 import { useStore } from '@/stores/index'
 import ProductModal from '../components/ProductModal.vue'
 import DelModal from '../components/DelModal.vue'
 import Pagination from '../components/Pagination.vue'
 
-export default {
-  name: 'ProductsView',
-  components: { ProductModal, DelModal, Pagination },
-  emits: ['show-toast'],
-  setup() {
-    const store = useStore()
-    const showModal = ref(false)
-    const showDeleteModal = ref(false)
-    const selectedProduct = ref(null)
-    const isLoading = ref(false) // 定義讀取狀態
-    const emitter = inject('emitter')
+// 引入必要的依賴
+const store = useStore()
+const emitter = inject('emitter')
 
-    const openModal = (product) => {
-      selectedProduct.value = product
-        ? {
-            ...product,
-            imagesUrl:
-              Array.isArray(product.imagesUrl) && product.imagesUrl.length
-                ? [...product.imagesUrl]
-                : ['', '', '', '', ''] // 確保有五個欄位
-          }
-        : {
-            title: '',
-            category: '',
-            origin_price: 0,
-            price: 0,
-            unit: '',
-            description: '',
-            content: '',
-            is_enabled: 1,
-            imageUrl: '',
-            imagesUrl: ['', '', '', '', ''] // 預設五個空的圖片網址
-          }
-      showModal.value = true
-    }
+// 定義狀態
+const showModal = ref(false)
+const showDeleteModal = ref(false)
+const selectedProduct = ref(null)
+const isLoading = ref(false)
 
-    const closeModal = () => {
-      showModal.value = false
-      selectedProduct.value = null
-    }
+// 顯示訊息的輔助函數
+const showToast = (options) => {
+  emitter.emit('show-toast', options)
+}
 
-    const openDeleteModal = (product) => {
-      selectedProduct.value = product
-      showDeleteModal.value = true
-    }
-
-    const closeDeleteModal = () => {
-      showDeleteModal.value = false
-      selectedProduct.value = null
-    }
-
-    const handleDeleteSuccess = async () => {
-      closeDeleteModal()
-      await store.getProducts()
-      emitter.emit('show-toast', { style: 'error', title: '產品刪除成功' })
-    }
-
-    const handleDeleteError = (message) => {
-      closeDeleteModal()
-      emitter.emit('show-toast', { style: 'error', title: '刪除失敗', content: message })
-    }
-
-    const saveProduct = async (product) => {
-      isLoading.value = true // 開始讀取
-      try {
-        if (product.id) {
-          const response = await store.updateProduct(product) // 使用 store 的方法更新產品
-          if (response.data.success) {
-            await store.getProducts()
-            emitter.emit('show-toast', { style: 'success', title: '產品更新成功' }) // 成功訊息
-          } else {
-            emitter.emit('show-toast', {
-              style: 'error',
-              title: '產品更新失敗',
-              content: response.data.message.join('、')
-            }) // 失敗訊息
-          }
-        } else {
-          const response = await store.createProduct(product) // 使用 store 的方法新增產品
-          if (response.data.success) {
-            await store.getProducts()
-            emitter.emit('show-toast', { style: 'success', title: '產品建立成功' }) // 成功訊息
-          } else {
-            emitter.emit('show-toast', {
-              style: 'error',
-              title: '產品建立失敗',
-              content: response.data.message.join('、')
-            }) // 失敗訊息
-          }
-        }
-      } catch (error) {
-        emitter.emit('show-toast', error.response?.data?.message || '操作失敗', 'error') // 錯誤訊息
-      } finally {
-        isLoading.value = false // 結束讀取
-        closeModal()
+// 產品相關操作函數
+const openModal = (product) => {
+  selectedProduct.value = product
+    ? {
+        ...product,
+        imagesUrl:
+          Array.isArray(product.imagesUrl) && product.imagesUrl.length
+            ? [...product.imagesUrl]
+            : ['', '', '', '', ''] // 確保有五個欄位
       }
-    }
-
-    const fetchProducts = async (page = 1) => {
-      isLoading.value = true
-      try {
-        await store.getProducts(page)
-      } catch (error) {
-        console.error('Failed to fetch products:', error)
-      } finally {
-        isLoading.value = false
+    : {
+        title: '',
+        category: '',
+        origin_price: 0,
+        price: 0,
+        unit: '',
+        description: '',
+        content: '',
+        is_enabled: 1,
+        imageUrl: '',
+        imagesUrl: ['', '', '', '', ''] // 預設五個空的圖片網址
       }
-    }
+  showModal.value = true
+}
 
-    onMounted(async () => {
-      isLoading.value = true // 開始讀取
-      try {
+const closeModal = () => {
+  showModal.value = false
+  selectedProduct.value = null
+}
+
+// 刪除相關操作函數
+const openDeleteModal = (product) => {
+  selectedProduct.value = product
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+  selectedProduct.value = null
+}
+
+const handleDeleteSuccess = async () => {
+  closeDeleteModal()
+  await store.getProducts()
+  showToast({ style: 'error', title: '產品刪除成功' })
+}
+
+// 儲存產品函數
+const saveProduct = async (product) => {
+  isLoading.value = true
+  try {
+    let response
+    if (product.id) {
+      // 更新產品
+      response = await store.updateProduct(product)
+      if (response.data.success) {
         await store.getProducts()
-      } catch (error) {
-        console.error('Failed to fetch products:', error)
-      } finally {
-        isLoading.value = false // 結束讀取
+        showToast({ style: 'success', title: '產品更新成功' })
+      } else {
+        showToast({
+          style: 'error',
+          title: '產品更新失敗',
+          content: response.data.message.join('、')
+        })
       }
-    })
-
-    return {
-      store,
-      showModal,
-      showDeleteModal,
-      selectedProduct,
-      openModal,
-      closeModal,
-      saveProduct,
-      isLoading,
-      openDeleteModal,
-      closeDeleteModal,
-      handleDeleteSuccess,
-      handleDeleteError,
-      fetchProducts
+    } else {
+      // 新增產品
+      response = await store.createProduct(product)
+      if (response.data.success) {
+        await store.getProducts()
+        showToast({ style: 'success', title: '產品建立成功' })
+      } else {
+        showToast({
+          style: 'error',
+          title: '產品建立失敗',
+          content: response.data.message.join('、')
+        })
+      }
     }
+  } catch (error) {
+    showToast({ 
+      style: 'error', 
+      title: '操作失敗', 
+      content: error.response?.data?.message || '發生未知錯誤' 
+    })
+  } finally {
+    isLoading.value = false
+    closeModal()
   }
 }
+
+// 取得產品列表
+const fetchProducts = async (page = 1) => {
+  isLoading.value = true
+  try {
+    await store.getProducts(page)
+  } catch (error) {
+    console.error('Failed to fetch products:', error)
+    showToast({ 
+      style: 'error', 
+      title: '取得產品失敗', 
+      content: error.message 
+    })
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 頁面載入時取得產品列表
+onMounted(() => {
+  fetchProducts()
+})
 </script>

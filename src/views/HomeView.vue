@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="home">
+  <div class="home" :class="{ 'no-scroll': lightboxOpen }">
     <!-- 首頁 Banner 輪播 -->
     <div class="banner-container">
       <div
@@ -553,7 +553,7 @@ const facilities = ref([
 const startSlideshow = () => {
   // 儲存計時器引用以便清除
   slideshowInterval = setInterval(() => {
-    currentSlide.value = (currentSlide.value + 1) % bannerSlides.value.length
+    setCurrentSlide((currentSlide.value + 1) % bannerSlides.value.length)
   }, 5000)
 }
 
@@ -568,25 +568,24 @@ const openLightbox = (index) => {
   // 使用 nextTick 確保 DOM 更新後再顯示 lightbox
   nextTick(() => {
     lightboxOpen.value = true
-    // 防止背景滾動
-    document.body.style.overflow = 'hidden'
   })
 }
 
 const closeLightbox = () => {
   lightboxOpen.value = false
-  // 恢復背景滾動
-  document.body.style.overflow = ''
 }
 
 const prevImage = () => {
-  currentImageIndex.value =
-    (currentImageIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length
-  lightboxImage.value = galleryImages.value[currentImageIndex.value]
+  updateCurrentImage(-1)
 }
 
 const nextImage = () => {
-  currentImageIndex.value = (currentImageIndex.value + 1) % galleryImages.value.length
+  updateCurrentImage(1)
+}
+
+const updateCurrentImage = (step) => {
+  currentImageIndex.value = 
+    (currentImageIndex.value + step + galleryImages.value.length) % galleryImages.value.length
   lightboxImage.value = galleryImages.value[currentImageIndex.value]
 }
 
@@ -600,11 +599,11 @@ const scrollToBooking = () => {
 
 // 評價輪播相關方法
 const prevReview = () => {
-  currentReview.value = (currentReview.value - 1 + reviews.value.length) % reviews.value.length
+  setCurrentReview((currentReview.value - 1 + reviews.value.length) % reviews.value.length)
 }
 
 const nextReview = () => {
-  currentReview.value = (currentReview.value + 1) % reviews.value.length
+  setCurrentReview((currentReview.value + 1) % reviews.value.length)
 }
 
 const setCurrentReview = (index) => {
@@ -614,7 +613,7 @@ const setCurrentReview = (index) => {
 const startReviewSlideshow = () => {
   // 每7秒切換一次評價
   reviewInterval = setInterval(() => {
-    currentReview.value = (currentReview.value + 1) % reviews.value.length
+    setCurrentReview((currentReview.value + 1) % reviews.value.length)
   }, 7000)
 }
 
@@ -654,8 +653,5 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* 確保 home 容器占滿視窗高度 */
-.home {
-  min-height: 100vh;
-}
+/* 不需要重複定義樣式，已在 _homeview.scss 中定義 */
 </style>
