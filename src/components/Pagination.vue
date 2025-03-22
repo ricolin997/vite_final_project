@@ -36,7 +36,11 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
+import { defineEmits } from 'vue'
+=======
 import { defineProps, defineEmits } from 'vue'
+>>>>>>> main
 
 // 添加元件名稱
 defineOptions({
