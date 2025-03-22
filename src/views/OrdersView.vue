@@ -107,7 +107,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, inject } from 'vue'
 import { useStore } from '@/stores/index'
 import Pagination from '../components/Pagination.vue'
@@ -115,156 +115,114 @@ import OrderDetailsModal from '../components/OrderDetailsModal.vue'
 import DelModal from '../components/DelModal.vue'
 import EditOrderModal from '../components/EditOrderModal.vue'
 
-export default {
-  name: 'OrdersView',
-  components: { Pagination, OrderDetailsModal, DelModal, EditOrderModal },
-  setup() {
-    const store = useStore()
-    const showDetailsModal = ref(false)
-    const selectedOrder = ref(null)
-    const isLoading = ref(false)
-    const showEditModal = ref(false)
-    const showDeleteModal = ref(false)
-    const showDeleteAllModal = ref(false)
-    const currentOrder = ref(null)
-    const emitter = inject('emitter')
+const store = useStore()
+const showDetailsModal = ref(false)
+const selectedOrder = ref(null)
+const isLoading = ref(false)
+const showEditModal = ref(false)
+const showDeleteModal = ref(false)
+const showDeleteAllModal = ref(false)
+const currentOrder = ref(null)
+const emitter = inject('emitter')
 
-    const fetchOrders = async (page = 1) => {
-      isLoading.value = true
-      try {
-        await store.getOrders(page)
-      } catch (error) {
-        console.error('取得訂單失敗:', error)
-        emitter.emit('show-toast', {
-          style: 'error',
-          title: '取得訂單失敗',
-          content: error.message || '請稍後再試'
-        })
-      } finally {
-        isLoading.value = false
-      }
-    }
+// 顯示 toast 訊息的通用函數
+const showToast = (style, title, content) => {
+  emitter.emit('show-toast', { style, title, content })
+}
 
-    const viewOrderDetails = (order) => {
-      selectedOrder.value = order
-      showDetailsModal.value = true
-    }
-
-    const closeDetailsModal = () => {
-      selectedOrder.value = null
-      showDetailsModal.value = false
-    }
-
-    const openEditModal = (order) => {
-      currentOrder.value = { ...order } // 創建訂單副本以避免直接修改原始資料
-      showEditModal.value = true
-    }
-
-    const closeEditModal = () => {
-      currentOrder.value = null
-      showEditModal.value = false
-    }
-
-    const updateOrder = async (updatedOrder) => {
-      isLoading.value = true
-      try {
-        await store.updateOrder(updatedOrder)
-        await fetchOrders() // 重新獲取訂單列表
-        // 使用 emitter 觸發 Toast 通知
-        emitter.emit('show-toast', {
-          style: 'success',
-          title: '訂單更新成功',
-          content: '訂單資料已成功更新'
-        })
-        closeEditModal()
-      } catch (error) {
-        // 如果更新失敗，觸發錯誤 Toast
-        emitter.emit('show-toast', {
-          style: 'error',
-          title: '更新失敗',
-          content: error.message || '訂單更新出現錯誤'
-        })
-      } finally {
-        isLoading.value = false
-      }
-    }
-
-    const openDeleteModal = (order) => {
-      currentOrder.value = { ...order } // 創建訂單副本以避免直接修改原始資料
-      showDeleteModal.value = true
-    }
-
-    const closeDeleteModal = () => {
-      currentOrder.value = null
-      showDeleteModal.value = false
-    }
-
-    const openDeleteAllModal = () => {
-      showDeleteAllModal.value = true
-    }
-
-    const closeDeleteAllModal = () => {
-      showDeleteAllModal.value = false
-    }
-
-    const deleteOrder = async (orderId) => {
-      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/order/${orderId}`
-      await store.deleteOrder(api)
-      await fetchOrders()
-    }
-
-    const deleteAllOrders = async () => {
-      const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/orders/all`
-      await store.deleteAllOrders(api)
-      await fetchOrders()
-    }
-
-    const handleDeleted = () => {
-      emitter.emit('show-toast', {
-        style: 'success',
-        title: '刪除成功',
-        content: '訂單已成功刪除'
-      })
-      closeDeleteModal()
-      closeDeleteAllModal()
-    }
-
-    const handleDeleteError = (errorMessage) => {
-      emitter.emit('show-toast', {
-        style: 'error',
-        title: '刪除失敗',
-        content: errorMessage || '刪除訂單時發生錯誤'
-      })
-    }
-
-    onMounted(() => {
-      fetchOrders()
-    })
-
-    return {
-      store,
-      fetchOrders,
-      viewOrderDetails,
-      closeDetailsModal,
-      openEditModal,
-      closeEditModal,
-      updateOrder,
-      openDeleteModal,
-      closeDeleteModal,
-      openDeleteAllModal,
-      closeDeleteAllModal,
-      deleteOrder,
-      deleteAllOrders,
-      handleDeleted,
-      handleDeleteError,
-      showDetailsModal,
-      selectedOrder,
-      showDeleteModal,
-      showDeleteAllModal,
-      showEditModal,
-      currentOrder,
-      isLoading
-    }
+// 獲取訂單資料
+const fetchOrders = async (page = 1) => {
+  isLoading.value = true
+  try {
+    await store.getOrders(page)
+  } catch (error) {
+    console.error('取得訂單失敗:', error)
+    showToast('error', '取得訂單失敗', error.message || '請稍後再試')
+  } finally {
+    isLoading.value = false
   }
 }
+
+// 訂單詳情相關函數
+const viewOrderDetails = (order) => {
+  selectedOrder.value = order
+  showDetailsModal.value = true
+}
+
+const closeDetailsModal = () => {
+  selectedOrder.value = null
+  showDetailsModal.value = false
+}
+
+// 編輯訂單相關函數
+const openEditModal = (order) => {
+  currentOrder.value = { ...order } // 創建訂單副本以避免直接修改原始資料
+  showEditModal.value = true
+}
+
+const closeEditModal = () => {
+  currentOrder.value = null
+  showEditModal.value = false
+}
+
+const updateOrder = async (updatedOrder) => {
+  isLoading.value = true
+  try {
+    await store.updateOrder(updatedOrder)
+    await fetchOrders() // 重新獲取訂單列表
+    showToast('success', '訂單更新成功', '訂單資料已成功更新')
+    closeEditModal()
+  } catch (error) {
+    showToast('error', '更新失敗', error.message || '訂單更新出現錯誤')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 刪除訂單相關函數
+const openDeleteModal = (order) => {
+  currentOrder.value = { ...order } // 創建訂單副本以避免直接修改原始資料
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  currentOrder.value = null
+  showDeleteModal.value = false
+}
+
+const openDeleteAllModal = () => {
+  showDeleteAllModal.value = true
+}
+
+const closeDeleteAllModal = () => {
+  showDeleteAllModal.value = false
+}
+
+const deleteOrder = async (orderId) => {
+  const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/order/${orderId}`
+  await store.deleteOrder(api)
+  await fetchOrders()
+}
+
+const deleteAllOrders = async () => {
+  const api = `${import.meta.env.VITE_API_URL}api/${import.meta.env.VITE_APP_PATH}/admin/orders/all`
+  await store.deleteAllOrders(api)
+  await fetchOrders()
+}
+
+// 處理刪除結果
+const handleDeleted = () => {
+  showToast('success', '刪除成功', '訂單已成功刪除')
+  closeDeleteModal()
+  closeDeleteAllModal()
+}
+
+const handleDeleteError = (errorMessage) => {
+  showToast('error', '刪除失敗', errorMessage || '刪除訂單時發生錯誤')
+}
+
+// 頁面載入時獲取訂單資料
+onMounted(() => {
+  fetchOrders()
+})
 </script>

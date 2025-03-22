@@ -121,9 +121,9 @@
                 <label><i class="fas fa-tag"></i> 價格範圍</label>
                 <select v-model="filters.priceRange" class="select-input">
                   <option value="">全部價格</option>
-                  <option value="low">NT$ 5,000 以下</option>
-                  <option value="medium">NT$ 5,000 - 8,000</option>
-                  <option value="high">NT$ 8,000 以上</option>
+                  <option value="low">{{ priceRanges.ranges.low.label }}</option>
+                  <option value="medium">{{ priceRanges.ranges.medium.label }}</option>
+                  <option value="high">{{ priceRanges.ranges.high.label }}</option>
                 </select>
               </div>
             </div>
@@ -314,21 +314,21 @@
                       class="price-quick-btn"
                       :class="{ active: filters.priceRange === 'low' }"
                     >
-                      經濟型 (NT$ 5,000 以下)
+                      {{ priceRanges.ranges.low.label }}
                     </button>
                     <button
                       @click="setPriceRange('medium')"
                       class="price-quick-btn"
                       :class="{ active: filters.priceRange === 'medium' }"
                     >
-                      中價位 (NT$ 5,000 - 8,000)
+                      {{ priceRanges.ranges.medium.label }}
                     </button>
                     <button
                       @click="setPriceRange('high')"
                       class="price-quick-btn"
                       :class="{ active: filters.priceRange === 'high' }"
                     >
-                      高級型 (NT$ 8,000 以上)
+                      {{ priceRanges.ranges.high.label }}
                     </button>
                   </div>
                 </div>
@@ -435,7 +435,7 @@
                 </span>
               </div>
               <div class="price">
-                NT$ {{ room.price.toLocaleString() }} <span class="per-night">/ 晚</span>
+                NT$ {{ formatPrice(room.price) }} <span class="per-night">/ 晚</span>
               </div>
               <div class="room-actions">
                 <button class="btn-details" @click="goToProductDetail(room.id)">查看詳情</button>
@@ -505,6 +505,15 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useStore } from '@/stores'
 import { useRouter, useRoute } from 'vue-router'
 import Pagination from '@/components/Pagination.vue'
+import { formatPrice, formatDate, formatDateDisplay } from '@/utils/format'
+import { 
+  roomTypes, 
+  roomTemplates, 
+  amenities, 
+  priceRanges, 
+  capacityRanges,
+  hasAmenity 
+} from '@/utils/roomData'
 
 const store = useStore()
 const router = useRouter()
@@ -519,24 +528,6 @@ const pagination = computed(() => store.pagination)
 const activeTab = ref('dates')
 // 篩選模式（快速/進階）
 const filterMode = ref('quick')
-
-// 日期格式化輔助函數
-const formatDate = (date) => {
-  if (!date) return ''
-  const d = new Date(date)
-  const year = d.getFullYear()
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-// 顯示友好的日期格式
-const formatDateDisplay = (dateStr) => {
-  if (!dateStr) return ''
-  const date = new Date(dateStr)
-  const options = { year: 'numeric', month: 'short', day: 'numeric' }
-  return date.toLocaleDateString('zh-TW', options)
-}
 
 // 篩選相關
 const today = computed(() => {
@@ -557,8 +548,8 @@ const filters = ref({
 })
 
 // 價格範圍滑塊
-const priceMinLimit = 1000
-const priceMaxLimit = 20000
+const priceMinLimit = priceRanges.min
+const priceMaxLimit = priceRanges.max
 const priceRange = ref({
   min: priceMinLimit,
   max: priceMaxLimit
@@ -568,52 +559,6 @@ const priceRange = ref({
 const adults = ref(2)
 const children = ref(0)
 const infants = ref(0)
-
-// 房型數據
-const roomTypes = [
-  {
-    value: 'standard',
-    label: '標準客房',
-    icon: 'fas fa-bed',
-    description: '舒適實用的標準房型，適合商務旅客或短期停留。'
-  },
-  {
-    value: 'deluxe',
-    label: '豪華客房',
-    icon: 'fas fa-star',
-    description: '更寬敞的空間與高級設施，提供舒適奢華的住宿體驗。'
-  },
-  {
-    value: 'suite',
-    label: '套房',
-    icon: 'fas fa-gem',
-    description: '獨立的起居空間與臥室，享受尊貴私密的住宿環境。'
-  },
-  {
-    value: 'family',
-    label: '家庭房',
-    icon: 'fas fa-users',
-    description: '專為家庭設計的寬敞房型，配備適合兒童的設施。'
-  },
-  {
-    value: 'view',
-    label: '景觀房',
-    icon: 'fas fa-mountain',
-    description: '擁有絕佳視野的房型，欣賞美麗的自然或城市景觀。'
-  }
-]
-
-// 設施數據
-const amenities = [
-  { id: 'wifi', name: '高速WiFi', icon: 'fas fa-wifi' },
-  { id: 'pool', name: '私人泳池', icon: 'fas fa-swimming-pool' },
-  { id: 'butler', name: '管家服務', icon: 'fas fa-concierge-bell' },
-  { id: 'spa', name: 'SPA服務', icon: 'fas fa-spa' },
-  { id: 'gym', name: '健身中心', icon: 'fas fa-dumbbell' },
-  { id: 'breakfast', name: '免費早餐', icon: 'fas fa-coffee' },
-  { id: 'parking', name: '免費停車', icon: 'fas fa-parking' },
-  { id: 'bar', name: '迷你吧', icon: 'fas fa-glass-martini-alt' }
-]
 
 // 監聽入住日期變化，確保退房日期不早於入住日期
 watch(
@@ -638,11 +583,11 @@ watch(
   (newVal) => {
     if (newVal.min === priceMinLimit && newVal.max === priceMaxLimit) {
       filters.value.priceRange = ''
-    } else if (newVal.max <= 5000) {
+    } else if (newVal.max <= priceRanges.ranges.low.max) {
       filters.value.priceRange = 'low'
-    } else if (newVal.min >= 8000) {
+    } else if (newVal.min >= priceRanges.ranges.high.min) {
       filters.value.priceRange = 'high'
-    } else if (newVal.min >= 5000 && newVal.max <= 8000) {
+    } else if (newVal.min >= priceRanges.ranges.medium.min && newVal.max <= priceRanges.ranges.medium.max) {
       filters.value.priceRange = 'medium'
     } else {
       filters.value.priceRange = 'custom'
@@ -656,14 +601,14 @@ watch(
   () => filters.value.priceRange,
   (newVal) => {
     if (newVal === 'low') {
-      priceRange.value.min = priceMinLimit
-      priceRange.value.max = 5000
+      priceRange.value.min = priceRanges.ranges.low.min
+      priceRange.value.max = priceRanges.ranges.low.max
     } else if (newVal === 'medium') {
-      priceRange.value.min = 5000
-      priceRange.value.max = 8000
+      priceRange.value.min = priceRanges.ranges.medium.min
+      priceRange.value.max = priceRanges.ranges.medium.max
     } else if (newVal === 'high') {
-      priceRange.value.min = 8000
-      priceRange.value.max = priceMaxLimit
+      priceRange.value.min = priceRanges.ranges.high.min
+      priceRange.value.max = priceRanges.ranges.high.max
     } else if (newVal === '') {
       priceRange.value.min = priceMinLimit
       priceRange.value.max = priceMaxLimit
@@ -705,33 +650,15 @@ const activeFilterCount = computed(() => {
 })
 
 // 獲取容量標籤
-const getCapacityLabel = (capacity) => {
-  switch (capacity) {
-    case '2':
-      return '最多2人'
-    case '4':
-      return '最多4人'
-    case '6':
-      return '5人以上'
-    default:
-      return '所有人數'
-  }
-}
+const getCapacityLabel = capacityRanges.getCapacityLabel
 
 // 獲取價格範圍標籤
 const getPriceRangeLabel = (range) => {
-  switch (range) {
-    case 'low':
-      return 'NT$ 5,000 以下'
-    case 'medium':
-      return 'NT$ 5,000 - 8,000'
-    case 'high':
-      return 'NT$ 8,000 以上'
-    case 'custom':
-      return `NT$ ${priceRange.value.min} - NT$ ${priceRange.value.max}`
-    default:
-      return '全部價格'
+  if (range === 'custom') {
+    return `NT$ ${priceRange.value.min} - NT$ ${priceRange.value.max}`
   }
+  
+  return range ? priceRanges.ranges[range]?.label || '全部價格' : '全部價格'
 }
 
 // 獲取房型標籤
@@ -902,82 +829,6 @@ const applyFilters = () => {
   }, 300)
 }
 
-// 客房基本資料模板（用於保留原有的 capacity、size、amenities、featured、tag 資料）
-const roomTemplates = [
-  {
-    capacity: '最多2人',
-    size: '35平方米',
-    amenities: [
-      { icon: 'fas fa-wifi', text: '高速WiFi' },
-      { icon: 'fas fa-tv', text: '智能電視' },
-      { icon: 'fas fa-coffee', text: '迷你吧' }
-    ],
-    featured: false,
-    tag: '',
-    roomType: 'standard'
-  },
-  {
-    capacity: '最多2人',
-    size: '45平方米',
-    amenities: [
-      { icon: 'fas fa-wifi', text: '高速WiFi' },
-      { icon: 'fas fa-glass-martini-alt', text: '行政酒廊' },
-      { icon: 'fas fa-concierge-bell', text: '管家服務' }
-    ],
-    featured: true,
-    tag: '熱門選擇',
-    roomType: 'deluxe'
-  },
-  {
-    capacity: '最多4人',
-    size: '60平方米',
-    amenities: [
-      { icon: 'fas fa-wifi', text: '高速WiFi' },
-      { icon: 'fas fa-child', text: '兒童設施' },
-      { icon: 'fas fa-couch', text: '獨立起居室' }
-    ],
-    featured: false,
-    tag: '',
-    roomType: 'family'
-  },
-  {
-    capacity: '最多4人',
-    size: '120平方米',
-    amenities: [
-      { icon: 'fas fa-wifi', text: '高速WiFi' },
-      { icon: 'fas fa-swimming-pool', text: '私人泳池' },
-      { icon: 'fas fa-concierge-bell', text: '24小時管家' }
-    ],
-    featured: false,
-    tag: '尊貴體驗',
-    roomType: 'suite'
-  },
-  {
-    capacity: '最多2人',
-    size: '50平方米',
-    amenities: [
-      { icon: 'fas fa-wifi', text: '高速WiFi' },
-      { icon: 'fas fa-umbrella-beach', text: '海景陽台' },
-      { icon: 'fas fa-bath', text: '豪華浴缸' }
-    ],
-    featured: false,
-    tag: '絕美景觀',
-    roomType: 'view'
-  },
-  {
-    capacity: '2人',
-    size: '55平方米',
-    amenities: [
-      { icon: 'fas fa-wifi', text: '高速WiFi' },
-      { icon: 'fas fa-glass-cheers', text: '迎賓香檳' },
-      { icon: 'fas fa-hot-tub', text: '私人按摩浴缸' }
-    ],
-    featured: false,
-    tag: '浪漫之選',
-    roomType: 'deluxe'
-  }
-]
-
 // 合併後端資料與客房模板資料
 const rooms = computed(() => {
   if (!backendProducts.value || Object.keys(backendProducts.value).length === 0) {
@@ -1018,45 +869,29 @@ const filteredRooms = computed(() => {
 
     // 篩選價格範圍
     if (filters.value.priceRange) {
-      if (filters.value.priceRange === 'low' && room.price >= 5000) {
-        return false
-      } else if (
-        filters.value.priceRange === 'medium' &&
-        (room.price < 5000 || room.price > 8000)
-      ) {
-        return false
-      } else if (filters.value.priceRange === 'high' && room.price <= 8000) {
-        return false
-      } else if (filters.value.priceRange === 'custom') {
+      if (filters.value.priceRange === 'custom') {
+        // 自定義價格範圍
         if (room.price < priceRange.value.min || room.price > priceRange.value.max) {
+          return false
+        }
+      } else {
+        // 使用預定義的價格範圍
+        if (!priceRanges.isPriceInRange(room.price, filters.value.priceRange)) {
           return false
         }
       }
     }
 
     // 篩選客人數量
-    if (filters.value.capacity) {
-      const capacityNumber = parseInt(filters.value.capacity)
-      const roomCapacityMatch = room.capacity.match(/\d+/)
-      const roomCapacity = roomCapacityMatch ? parseInt(roomCapacityMatch[0]) : 0
+    if (filters.value.capacity && !capacityRanges.isCapacityInRange(room.capacity, filters.value.capacity)) {
+      return false
+    }
 
-      if (capacityNumber === 6) {
-        // 5人以上
-        if (roomCapacity < 5) return false
-      } else if (roomCapacity !== capacityNumber) {
+    // 篩選特色服務 - 使用循環優化
+    for (const [key, isSelected] of Object.entries(filters.value.features)) {
+      if (isSelected && !hasAmenity(room.amenities, key)) {
         return false
       }
-    }
-
-    // 篩選特色服務
-    if (filters.value.features.wifi && !room.amenities.some((a) => a.text.includes('WiFi'))) {
-      return false
-    }
-    if (filters.value.features.pool && !room.amenities.some((a) => a.text.includes('泳池'))) {
-      return false
-    }
-    if (filters.value.features.butler && !room.amenities.some((a) => a.text.includes('管家'))) {
-      return false
     }
 
     return true
@@ -1066,14 +901,14 @@ const filteredRooms = computed(() => {
 // 從 URL 查詢參數中獲取篩選條件
 const getFiltersFromQuery = () => {
   const query = route.query
-
-  if (query.checkInDate) filters.value.checkInDate = query.checkInDate.toString()
-  if (query.checkOutDate) filters.value.checkOutDate = query.checkOutDate.toString()
-  if (query.capacity) filters.value.capacity = query.capacity.toString()
-  if (query.roomType) filters.value.roomType = query.roomType.toString()
-
-  // 如果有價格範圍參數，也可以處理
-  if (query.priceRange) filters.value.priceRange = query.priceRange.toString()
+  const allowedFilters = ['checkInDate', 'checkOutDate', 'capacity', 'roomType', 'priceRange']
+  
+  // 處理一般篩選條件
+  allowedFilters.forEach(key => {
+    if (query[key]) {
+      filters.value[key] = query[key].toString()
+    }
+  })
 
   // 如果有特定的篩選條件，自動切換到進階篩選模式
   if (query.roomType || (query.checkInDate && query.checkOutDate)) {

@@ -56,34 +56,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useStore } from '@/stores/index'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
-export default {
-  name: 'LoginView',
-  setup() {
-    const store = useStore()
-    const user = ref({ username: '', password: '' })
-    const router = useRouter()
-    const errorMessage = ref('')
+const store = useStore()
+const user = ref({ username: '', password: '' })
+const router = useRouter()
+const errorMessage = ref('')
 
-    const signIn = async () => {
-      try {
-        const response = await store.login(user.value)
-        if (response.data.success) {
-          router.push('/dashboard/products')
-        } else {
-          errorMessage.value = response.data.message
-        }
-      } catch (error) {
-        errorMessage.value = '登入失敗：' + (error.response?.data?.message || error.message)
-        console.error('登入失敗：', error)
-      }
+const signIn = async () => {
+  try {
+    const response = await store.login(user.value)
+    if (response.data.success) {
+      router.push('/dashboard/products')
+    } else {
+      errorMessage.value = response.data.message
     }
-
-    return { user, signIn, errorMessage }
+  } catch (error) {
+    errorMessage.value = '登入失敗：' + (error.response?.data?.message || error.message)
+    console.error('登入失敗：', error)
   }
 }
 </script>

@@ -85,7 +85,7 @@
         </div>
 
         <!-- 設施詳細內容 -->
-        <div class="facility-showcase" v-show="isFacilityVisible">
+        <div class="facility-showcase">
           <div class="facility-hero">
             <div
               v-for="(facility, index) in allFacilities"
@@ -555,15 +555,42 @@ const selectFacility = (index) => {
   }
 }
 
-// 使用 v-show
-const isFacilityVisible = ref(true)
-
-// 預加載圖片
+// 改進預加載圖片函數
 const preloadImages = () => {
-  allFacilities.value.forEach((facility) => {
-    const img = new Image()
-    img.src = facility.image
-  })
+  // 使用 requestIdleCallback 在瀏覽器空閒時預加載圖片
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(() => {
+      allFacilities.value.forEach((facility) => {
+        if (facility.image) {
+          const img = new Image()
+          img.src = facility.image
+        }
+        // 也預加載畫廊圖片
+        if (facility.galleryImages && Array.isArray(facility.galleryImages)) {
+          facility.galleryImages.forEach(imgSrc => {
+            const img = new Image()
+            img.src = imgSrc
+          })
+        }
+      })
+    })
+  } else {
+    // 對於不支持 requestIdleCallback 的瀏覽器，使用 setTimeout
+    setTimeout(() => {
+      allFacilities.value.forEach((facility) => {
+        if (facility.image) {
+          const img = new Image()
+          img.src = facility.image
+        }
+        if (facility.galleryImages && Array.isArray(facility.galleryImages)) {
+          facility.galleryImages.forEach(imgSrc => {
+            const img = new Image()
+            img.src = imgSrc
+          })
+        }
+      })
+    }, 300)
+  }
 }
 
 onMounted(() => {
@@ -574,8 +601,5 @@ onMounted(() => {
 // 組件卸載時清理
 onUnmounted(() => {
   selectedFacilityIndex.value = 0
-  isFacilityVisible.value = true
 })
 </script>
-
-<style scoped></style>

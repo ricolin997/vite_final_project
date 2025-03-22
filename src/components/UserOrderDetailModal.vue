@@ -119,104 +119,108 @@
   </div>
 </template>
 
-<script>
-import { onMounted, onUnmounted } from 'vue'
+<script setup>
+import { onMounted, onUnmounted, defineEmits } from 'vue'
 import PaymentButton from '@/components/PaymentButton.vue'
 
-export default {
-  components: {
-    PaymentButton
+// 組件名稱
+defineOptions({
+  name: 'UserOrderDetailModal'
+})
+
+// 定義 props
+defineProps({
+  order: {
+    type: Object,
+    default: () => null
   },
-  props: {
-    order: {
-      type: Object,
-      default: () => null
-    },
-    isLoading: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['order-paid'],
-  setup(props, { emit }) {
-    // 處理付款成功事件
-    const handlePaymentSuccess = (orderId) => {
-      emit('order-paid', orderId)
-
-      // 確保模態框背景被正確移除
-      setTimeout(() => {
-        closeModalManually()
-      }, 600)
-    }
-
-    // 手動關閉模態框
-    const closeModalManually = () => {
-      const modalElement = document.getElementById('orderModal')
-      if (modalElement) {
-        // 嘗試使用 Bootstrap API
-        try {
-          if (window.bootstrap) {
-            const modalInstance = window.bootstrap.Modal.getInstance(modalElement)
-            if (modalInstance) {
-              modalInstance.hide()
-              return
-            }
-          }
-        } catch (error) {
-          console.error('使用 Bootstrap API 關閉模態框失敗:', error)
-        }
-
-        // 手動清理
-        modalElement.classList.remove('show')
-        modalElement.style.display = 'none'
-        modalElement.setAttribute('aria-hidden', 'true')
-        modalElement.removeAttribute('aria-modal')
-
-        const backdrop = document.querySelector('.modal-backdrop')
-        if (backdrop) {
-          backdrop.remove()
-        }
-
-        document.body.classList.remove('modal-open')
-        document.body.style.overflow = ''
-        document.body.style.paddingRight = ''
-      }
-    }
-
-    const formatDate = (timestamp) => {
-      const date = new Date(timestamp * 1000)
-      return date.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
-    }
-
-    // 在組件掛載時，添加事件監聽
-    onMounted(() => {
-      const modalElement = document.getElementById('orderModal')
-      if (modalElement) {
-        modalElement.addEventListener('hidden.bs.modal', () => {
-          const backdrop = document.querySelector('.modal-backdrop')
-          if (backdrop) {
-            backdrop.remove()
-          }
-          document.body.classList.remove('modal-open')
-          document.body.style.overflow = ''
-          document.body.style.paddingRight = ''
-        })
-      }
-    })
-
-    // 在組件卸載時，移除事件監聽
-    onUnmounted(() => {
-      const modalElement = document.getElementById('orderModal')
-      if (modalElement) {
-        modalElement.removeEventListener('hidden.bs.modal')
-      }
-    })
-
-    return {
-      formatDate,
-      handlePaymentSuccess,
-      closeModalManually
-    }
+  isLoading: {
+    type: Boolean,
+    default: false
   }
+})
+
+// 定義事件
+const emit = defineEmits(['order-paid'])
+
+/**
+ * 格式化時間戳為本地日期字符串
+ * @param {Number} timestamp - Unix 時間戳 (秒)
+ * @returns {String} - 格式化後的日期字符串
+ */
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
 }
+
+/**
+ * 清理模態框相關 DOM 元素和樣式
+ */
+const cleanupModalEffects = () => {
+  const backdrop = document.querySelector('.modal-backdrop')
+  if (backdrop) {
+    backdrop.remove()
+  }
+  document.body.classList.remove('modal-open')
+  document.body.style.overflow = ''
+  document.body.style.paddingRight = ''
+}
+
+/**
+ * 手動關閉模態框
+ */
+const closeModalManually = () => {
+  const modalElement = document.getElementById('orderModal')
+  if (!modalElement) return
+  
+  // 嘗試使用 Bootstrap API
+  try {
+    if (window.bootstrap) {
+      const modalInstance = window.bootstrap.Modal.getInstance(modalElement)
+      if (modalInstance) {
+        modalInstance.hide()
+        return
+      }
+    }
+  } catch (error) {
+    console.error('使用 Bootstrap API 關閉模態框失敗:', error)
+  }
+
+  // 手動清理
+  modalElement.classList.remove('show')
+  modalElement.style.display = 'none'
+  modalElement.setAttribute('aria-hidden', 'true')
+  modalElement.removeAttribute('aria-modal')
+  
+  cleanupModalEffects()
+}
+
+/**
+ * 處理付款成功事件
+ * @param {String} orderId - 訂單 ID
+ */
+const handlePaymentSuccess = (orderId) => {
+  emit('order-paid', orderId)
+
+  // 確保模態框背景被正確移除
+  setTimeout(() => {
+    closeModalManually()
+  }, 600)
+}
+
+// 在組件掛載時，添加事件監聽
+onMounted(() => {
+  const modalElement = document.getElementById('orderModal')
+  if (modalElement) {
+    modalElement.addEventListener('hidden.bs.modal', cleanupModalEffects)
+  }
+})
+
+// 在組件卸載時，移除事件監聽
+onUnmounted(() => {
+  const modalElement = document.getElementById('orderModal')
+  if (modalElement) {
+    modalElement.removeEventListener('hidden.bs.modal', cleanupModalEffects)
+  }
+})
 </script>

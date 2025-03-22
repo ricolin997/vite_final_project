@@ -13,27 +13,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import NavBar from '@/components/NavBar.vue'
 import SiteFooter from '@/components/Footer.vue'
-
-export default {
-  name: 'FrontLayout',
-  components: {
-    NavBar,
-    SiteFooter
-  }
-}
 </script>
 
-<style scoped>
-.front-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-main {
-  flex: 1;
-}
-</style>

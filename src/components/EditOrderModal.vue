@@ -8,7 +8,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">編輯訂單</h5>
-            <button type="button" class="btn-close" @click="$emit('close')"></button>
+            <button type="button" class="btn-close" @click="emitClose"></button>
           </div>
           <div class="modal-body">
             <form @submit.prevent="submitOrder">
@@ -86,7 +86,7 @@
               </div>
 
               <div class="modal-footer">
-                <button type="button" class="btn-secondary" @click="$emit('close')">取消</button>
+                <button type="button" class="btn-secondary" @click="emitClose">取消</button>
                 <button type="submit" class="btn-primary">更新訂單</button>
               </div>
             </form>
@@ -97,63 +97,65 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, inject } from 'vue'
 
-export default {
-  props: {
-    order: {
-      type: Object,
-      required: true
-    }
-  },
-  emits: ['close', 'update'],
-  setup(props, { emit }) {
-    // 注入 emitter
-    const emitter = inject('emitter')
-
-    // 創建訂單副本，避免直接修改原始資料
-    const editedOrder = ref({
-      id: props.order.id,
-      is_paid: props.order.is_paid,
-      total: props.order.total,
-      create_at: props.order.create_at,
-      message: props.order.message || '',
-      payment_method: props.order.payment_method || '',
-      user: { ...props.order.user },
-      products: props.order.products || []
-    })
-
-    const submitOrder = () => {
-      // 驗證表單
-      if (!editedOrder.value.total || editedOrder.value.total <= 0) {
-        emitter.emit('show-toast', {
-          style: 'danger',
-          title: '驗證錯誤',
-          content: '請輸入有效的總金額'
-        })
-        return
-      }
-      // 驗證用戶姓名和信箱
-      if (!editedOrder.value.user.name || !editedOrder.value.user.email) {
-        emitter.emit('show-toast', {
-          style: 'danger',
-          title: '驗證錯誤',
-          content: '請填寫用戶姓名和信箱'
-        })
-        return
-      }
-
-      // 提交更新
-      emit('update', editedOrder.value)
-    }
-
-    return {
-      editedOrder,
-      submitOrder
-    }
+// Props 定義
+const props = defineProps({
+  order: {
+    type: Object,
+    required: true
   }
+})
+
+// 定義事件
+const emit = defineEmits(['close', 'update'])
+
+// 注入 emitter
+const emitter = inject('emitter')
+
+// 創建訂單副本，避免直接修改原始資料
+const editedOrder = ref({
+  id: props.order.id,
+  is_paid: props.order.is_paid,
+  total: props.order.total,
+  create_at: props.order.create_at,
+  message: props.order.message || '',
+  payment_method: props.order.payment_method || '',
+  user: { ...props.order.user },
+  products: props.order.products || []
+})
+
+// 顯示錯誤訊息
+const showError = (title, content) => {
+  emitter.emit('show-toast', {
+    style: 'danger',
+    title,
+    content
+  })
+}
+
+// 關閉模態框
+const emitClose = () => {
+  emit('close')
+}
+
+// 提交訂單更新
+const submitOrder = () => {
+  // 驗證表單
+  if (!editedOrder.value.total || editedOrder.value.total <= 0) {
+    showError('驗證錯誤', '請輸入有效的總金額')
+    return
+  }
+  
+  // 驗證用戶姓名和信箱
+  if (!editedOrder.value.user.name || !editedOrder.value.user.email) {
+    showError('驗證錯誤', '請填寫用戶姓名和信箱')
+    return
+  }
+
+  // 提交更新
+  emit('update', editedOrder.value)
 }
 </script>
 
-<style scoped></style>

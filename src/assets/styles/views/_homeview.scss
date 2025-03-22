@@ -2,6 +2,18 @@
  * Homeview 首頁樣式
  **********************************/
 
+/* 首頁樣式 */
+.home {
+  background-color: var(--white);
+  min-height: 100vh;
+  color: var(--text-color);
+  
+  &.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
+}
+
 /* 首頁 Banner區域樣式*/
 .banner-container {
   height: 100vh; /* 保持 100vh 高度 */
@@ -2067,3 +2079,5 @@
     background-color: var(--primary-color);
   }
 }
+
+

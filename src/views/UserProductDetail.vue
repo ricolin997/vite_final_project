@@ -9,19 +9,25 @@
           <span class="separator">/</span>
           <router-link to="/user/products">客房</router-link>
           <span class="separator">/</span>
-          <span class="current">{{ product?.title || '客房詳情' }}</span>
+          <span class="current">{{ productTitle || '客房詳情' }}</span>
         </div>
       </div>
     </section>
 
+    <!-- 載入中狀態 -->
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>載入中，請稍候...</p>
+    </div>
+
     <!-- 主要內容區域 -->
-    <section class="product-content" v-if="product">
+    <section v-else-if="product" class="product-content">
       <div class="container">
         <div class="product-main">
           <!-- 左側圖片區域 -->
           <div class="product-gallery">
             <div class="main-image">
-              <img :src="currentMainImage" :alt="product.title" />
+              <img :src="currentMainImage" :alt="productTitle" />
             </div>
             <div class="thumbnail-gallery">
               <div
@@ -31,7 +37,7 @@
                 :class="{ active: image === currentMainImage }"
                 @click="changeMainImage(image)"
               >
-                <img :src="image" :alt="`${product.title} - 圖片 ${index + 1}`" />
+                <img :src="image" :alt="`${productTitle} - 圖片 ${index + 1}`" />
               </div>
             </div>
           </div>
@@ -39,7 +45,7 @@
           <!-- 右側商品資訊 -->
           <div class="product-info">
             <div class="product-header">
-              <h2>{{ product.title }}</h2>
+              <h2>{{ productTitle }}</h2>
               <div class="product-rating">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -51,7 +57,7 @@
             </div>
 
             <div class="product-description">
-              <p>{{ product.description }}</p>
+              <p>{{ productDescription }}</p>
             </div>
 
             <div class="product-features">
@@ -87,11 +93,11 @@
 
             <div class="product-price">
               <div class="price-info">
-                <div class="original-price" v-if="product.origin_price > product.price">
-                  原價 NT$ {{ formatPrice(product.origin_price) }}
+                <div class="original-price" v-if="productOriginPrice > productPrice">
+                  原價 NT$ {{ formatPrice(productOriginPrice) }}
                 </div>
                 <div class="current-price">
-                  NT$ {{ formatPrice(product.price) }}
+                  NT$ {{ formatPrice(productPrice) }}
                   <span class="per-night">/ 晚</span>
                 </div>
               </div>
@@ -154,7 +160,7 @@
             <div v-show="activeTab === 'description'" class="tab-pane">
               <div
                 class="product-description-content"
-                v-html="product.content || defaultDescription"
+                v-html="productContent || defaultDescription"
               ></div>
             </div>
 
@@ -307,18 +313,18 @@
           <h2>您可能也會喜歡</h2>
           <div class="recommended-grid">
             <div
-              v-for="product in recommendProducts"
-              :key="product.id"
+              v-for="recProduct in recommendProducts"
+              :key="recProduct.id"
               class="recommended-item"
-              @click="goToProductDetail(product.id)"
+              @click="goToProductDetail(recProduct.id)"
             >
               <div class="recommended-image">
-                <img :src="product.imageUrl" :alt="product.title" />
+                <img :src="recProduct.imageUrl" :alt="recProduct.title" />
               </div>
               <div class="recommended-info">
-                <h3>{{ product.title }}</h3>
+                <h3>{{ recProduct.title }}</h3>
                 <div class="recommended-price">
-                  NT$ {{ formatPrice(product.price) }} <span>/ 晚</span>
+                  NT$ {{ formatPrice(recProduct.price) }} <span>/ 晚</span>
                 </div>
                 <button class="btn-view">查看詳情</button>
               </div>
@@ -327,12 +333,6 @@
         </div>
       </div>
     </section>
-
-    <!-- 載入中狀態 -->
-    <div v-if="isLoading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>載入中，請稍候...</p>
-    </div>
   </div>
 </template>
 
@@ -340,6 +340,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/stores'
+import { formatPrice } from '@/utils/format'
 
 const route = useRoute()
 const router = useRouter()
@@ -352,6 +353,21 @@ const quantity = ref(1)
 const isFavorite = ref(false)
 const currentMainImage = ref(null)
 const activeTab = ref('description')
+
+// 使用計算屬性簡化產品屬性引用
+const productTitle = computed(() => product.value?.title || '')
+const productDescription = computed(() => product.value?.description || '')
+const productContent = computed(() => product.value?.content || '')
+const productPrice = computed(() => product.value?.price || 0)
+const productOriginPrice = computed(() => product.value?.origin_price || 0)
+const productId = computed(() => product.value?.id || '')
+
+// 預設照片
+const DEFAULT_ADDITIONAL_IMAGES = [
+  'https://images.unsplash.com/photo-1590490360182-c33d57733427',
+  'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b',
+  'https://images.unsplash.com/photo-1584132905271-512c958d674a'
+]
 
 // 默認描述內容（當產品沒有內容時使用）
 const defaultDescription = `
@@ -399,12 +415,7 @@ const imageGallery = computed(() => {
 
   // 如果沒有額外圖片，則套用預設圖片
   if (additionalImages.length === 0) {
-    return [
-      mainImage,
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b',
-      'https://images.unsplash.com/photo-1584132905271-512c958d674a'
-    ]
+    return [mainImage, ...DEFAULT_ADDITIONAL_IMAGES]
   }
 
   return [mainImage, ...additionalImages]
@@ -416,7 +427,7 @@ const recommendProducts = computed(() => {
   if (allProducts.length === 0) return []
 
   // 排除當前產品
-  const filteredProducts = allProducts.filter((p) => p.id !== product.value?.id)
+  const filteredProducts = allProducts.filter((p) => p.id !== productId.value)
 
   // 隨機排序並取前 4 個
   return filteredProducts.sort(() => 0.5 - Math.random()).slice(0, 4)
@@ -458,7 +469,7 @@ const decreaseQuantity = () => {
 
 const addToCart = async () => {
   try {
-    await store.addToCart(product.value.id, quantity.value)
+    await store.addToCart(productId.value, quantity.value)
     alert('成功加入購物車')
   } catch (error) {
     alert('加入購物車失敗')
@@ -467,8 +478,8 @@ const addToCart = async () => {
 
 // 檢查產品是否在我的最愛中
 const checkIfFavorite = () => {
-  if (product.value && product.value.id) {
-    isFavorite.value = store.isInFavorites(product.value.id)
+  if (productId.value) {
+    isFavorite.value = store.isInFavorites(productId.value)
   }
 }
 
@@ -477,7 +488,7 @@ const toggleFavorite = () => {
 
   if (isFavorite.value) {
     // 從我的最愛中移除
-    store.removeFromFavorites(product.value.id)
+    store.removeFromFavorites(productId.value)
   } else {
     // 添加到我的最愛
     store.addToFavorites(product.value)
@@ -489,10 +500,6 @@ const toggleFavorite = () => {
 
 const goToProductDetail = (productId) => {
   router.push({ name: 'UserProductDetail', params: { id: productId } })
-}
-
-const formatPrice = (price) => {
-  return price.toLocaleString()
 }
 
 // 監聽路由參數變化

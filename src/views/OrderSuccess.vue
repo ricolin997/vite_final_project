@@ -120,46 +120,34 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '@/stores'
 
-export default {
-  setup() {
-    const route = useRoute()
-    const store = useStore()
-    const orderId = ref(route.query.orderId || 'SHIBA-' + Math.floor(Math.random() * 1000000))
+const route = useRoute()
+const store = useStore()
+const orderId = ref(route.query.orderId || 'SHIBA-' + Math.floor(Math.random() * 1000000))
 
-    const formatDate = (date) => {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' }
-      return new Date(date).toLocaleDateString('zh-TW', options)
-    }
-
-    // 在頁面加載時清空購物車數據
-    onMounted(async () => {
-      try {
-        // 清空購物車中的所有商品
-        if (store.cart && store.cart.length > 0) {
-          // 使用一個空陣列來保存所有的刪除操作的 Promise
-          const deletePromises = store.cart.map((item) => store.removeCartItem(item.id))
-
-          // 等待所有刪除操作完成
-          await Promise.all(deletePromises)
-        }
-
-        // 重新獲取購物車數據，確保 NavBar 中的購物車圖標數量更新
-        await store.getCart()
-      } catch (error) {
-        console.error('清空購物車失敗：', error)
-      }
-    })
-
-    return {
-      orderId,
-      formatDate,
-      store
-    }
-  }
+// 格式化日期函數
+const formatDate = (date) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  return new Date(date).toLocaleDateString('zh-TW', options)
 }
+
+// 在頁面加載時清空購物車數據
+onMounted(async () => {
+  try {
+    // 只有在購物車有商品時才執行清空操作
+    if (store.cart?.length > 0) {
+      // 使用 Promise.all 並行處理所有刪除操作
+      await Promise.all(store.cart.map(item => store.removeCartItem(item.id)))
+      
+      // 重新獲取購物車數據，更新 NavBar 中的購物車圖標數量
+      await store.getCart()
+    }
+  } catch (error) {
+    console.error('清空購物車失敗：', error)
+  }
+})
 </script>

@@ -339,7 +339,7 @@
             <div class="content-header">
               <h2>會員優惠</h2>
               <div class="filter-options">
-                <select class="filter-select">
+                <select class="filter-select" v-model="couponFilterStatus">
                   <option value="all">所有優惠</option>
                   <option value="available">可使用</option>
                   <option value="used">已使用</option>
@@ -349,7 +349,7 @@
             </div>
 
             <div class="coupons-list">
-              <div v-for="coupon in store.coupons" :key="coupon.id" class="coupon-card available">
+              <div v-for="coupon in filteredCoupons" :key="coupon.id" class="coupon-card available">
                 <div class="coupon-left">
                   <div class="discount-amount">{{ coupon.percent }}<span>折</span></div>
                 </div>
@@ -667,7 +667,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useStore } from '@/stores'
 import { useRouter } from 'vue-router'
@@ -677,247 +677,229 @@ import Pagination from '@/components/Pagination.vue'
 import UserOrderDetailModal from '@/components/UserOrderDetailModal.vue'
 import PaymentButton from '@/components/PaymentButton.vue'
 
-export default {
-  name: 'UserMember',
-  components: {
-    Loading,
-    Pagination,
-    UserOrderDetailModal,
-    PaymentButton
-  },
-  props: {
-    tab: {
-      type: String,
-      default: 'profile'
-    }
-  },
-  setup(props) {
-    const store = useStore()
-    const activeTab = ref(props.tab || 'profile')
-    const router = useRouter()
 
-    // 訂單相關
-    const isLoading = ref(false)
-    const isLoadingOrder = ref(false)
-    const orders = computed(() => store.orders || [])
-    const pagination = computed(() => store.pagination || {})
-    const currentOrder = computed(() => store.currentOrder)
-    const filterStatus = ref('all')
+// 定義 props
+const props = defineProps({
+  tab: {
+    type: String,
+    default: 'profile'
+  }
+})
 
-    // 訂單相關
-    const filteredOrders = computed(() => {
-      if (filterStatus.value === 'all') return orders.value
-      if (filterStatus.value === 'paid') return orders.value.filter((order) => order.is_paid)
-      if (filterStatus.value === 'unpaid') return orders.value.filter((order) => !order.is_paid)
-      return orders.value
-    })
+const store = useStore()
+const activeTab = ref(props.tab || 'profile')
+const router = useRouter()
 
-    // 我的最愛相關
-    const favoriteSortOption = ref('newest')
-    const favorites = computed(() => store.favorites || [])
+// 訂單相關
+const isLoading = ref(false)
+const isLoadingOrder = ref(false)
+const orders = computed(() => store.orders || [])
+const pagination = computed(() => store.pagination || {})
+const currentOrder = computed(() => store.currentOrder)
+const filterStatus = ref('all')
 
-    // 根據排序選項對我的最愛進行排序
-    const sortedFavorites = computed(() => {
-      if (favoriteSortOption.value === 'price-high') {
-        return [...favorites.value].sort((a, b) => b.price - a.price)
-      } else if (favoriteSortOption.value === 'price-low') {
-        return [...favorites.value].sort((a, b) => a.price - b.price)
-      } else {
-        // 預設按最新加入排序（假設最新加入的在陣列末尾）
-        return [...favorites.value].reverse()
-      }
-    })
+// 優惠券相關
+const couponFilterStatus = ref('all')
 
-    // 從我的最愛中移除
-    const removeFromFavorites = (productId) => {
-      store.removeFromFavorites(productId)
-    }
+// 過濾優惠券
+const filteredCoupons = computed(() => {
+  if (couponFilterStatus.value === 'all') return store.coupons || []
+  // 這裡假設優惠券數據有 status 屬性，實際可能需要根據API返回的數據結構調整
+  return (store.coupons || []).filter(coupon => {
+    if (couponFilterStatus.value === 'available') return !coupon.is_used && new Date(coupon.due_date) > new Date()
+    if (couponFilterStatus.value === 'used') return coupon.is_used
+    if (couponFilterStatus.value === 'expired') return new Date(coupon.due_date) <= new Date()
+    return true
+  })
+})
 
-    // 加入購物車
-    const addToCart = async (productId) => {
-      try {
-        await store.addToCart(productId, 1)
-        alert('成功加入購物車')
-      } catch (error) {
-        alert('加入購物車失敗')
-      }
-    }
+// 優化後的過濾訂單邏輯
+const filteredOrders = computed(() => {
+  if (filterStatus.value === 'all') return orders.value
+  return orders.value.filter((order) => 
+    filterStatus.value === 'paid' ? order.is_paid : !order.is_paid
+  )
+})
 
-    // 使用優惠碼功能
-    const usePromoCode = async (promoCode) => {
-      isLoading.value = true
-      try {
-        // 先獲取購物車資料
-        await store.getCart()
+// 我的最愛相關
+const favoriteSortOption = ref('newest')
+const favorites = computed(() => store.favorites || [])
 
-        // 檢查購物車是否為空
-        if (store.cart && store.cart.length > 0) {
-          // 購物車不為空，跳轉到購物車頁面
-          router.push('/user/cart')
+// 根據排序選項對我的最愛進行排序
+const sortedFavorites = computed(() => {
+  if (favoriteSortOption.value === 'price-high') {
+    return [...favorites.value].sort((a, b) => b.price - a.price)
+  } else if (favoriteSortOption.value === 'price-low') {
+    return [...favorites.value].sort((a, b) => a.price - b.price)
+  }
+  // 預設按最新加入排序（假設最新加入的在陣列末尾）
+  return [...favorites.value].reverse()
+})
 
-          // 設置一個標記，表示需要自動套用優惠碼
-          // 使用 localStorage 暫存優惠碼，以便在購物車頁面使用
-          localStorage.setItem('autoApplyPromoCode', promoCode)
-        } else {
-          // 購物車為空，跳轉到商品頁面
-          router.push('/user/products')
-          // 顯示提示訊息
-          alert('您的購物車是空的，請先選擇商品')
-        }
-      } catch (error) {
-        console.error('處理優惠碼失敗：', error)
-      } finally {
-        isLoading.value = false
-      }
-    }
+// 從我的最愛中移除
+const removeFromFavorites = (productId) => {
+  store.removeFromFavorites(productId)
+}
 
-    // 查看產品詳情
-    const goToProductDetail = (productId) => {
-      router.push({ name: 'UserProductDetail', params: { id: productId } })
-    }
-
-    const fetchOrders = async (page = 1) => {
-      isLoading.value = true
-      try {
-        await store.getUserOrders(page)
-      } catch (error) {
-        console.error('取得訂單失敗：', error)
-      } finally {
-        isLoading.value = false
-      }
-    }
-
-    const openOrderModal = async (orderId) => {
-      try {
-        isLoadingOrder.value = true
-        await store.getUserOrderDetails(orderId)
-      } catch (error) {
-        console.error('載入訂單詳情失敗：', error)
-      } finally {
-        isLoadingOrder.value = false
-      }
-    }
-
-    // 處理付款成功事件
-    const handleOrderPaid = (orderId) => {
-      // 更新訂單列表中的訂單狀態
-      const orderIndex = orders.value.findIndex((order) => order.id === orderId)
-      if (orderIndex !== -1) {
-        orders.value[orderIndex].is_paid = true
-      }
-
-      // 更新當前訂單狀態
-      if (currentOrder.value && currentOrder.value.id === orderId) {
-        currentOrder.value.is_paid = true
-      }
-    }
-
-    //取得優惠券資料
-    const fetchCoupons = async () => {
-      try {
-        await store.getCoupons()
-      } catch (error) {
-        console.error('取得優惠券失敗：', error)
-      }
-    }
-
-    const formatDate = (timestamp) => {
-      if (!timestamp) return '無日期資訊'
-
-      // 處理不同格式的日期
-      let date
-      if (typeof timestamp === 'number') {
-        // Unix 時間戳（秒）
-        date = new Date(timestamp * 1000)
-      } else if (typeof timestamp === 'string') {
-        // ISO 格式的日期字符串
-        date = new Date(timestamp)
-      } else {
-        // 已經是 Date 對象
-        date = timestamp
-      }
-
-      // 檢查日期是否有效
-      if (isNaN(date.getTime())) {
-        return '無效日期'
-      }
-
-      return date.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
-    }
-
-    const getOrderTitle = (order) => {
-      if (order.products && Object.keys(order.products).length > 0) {
-        const firstProduct = Object.values(order.products)[0]
-        return firstProduct.product.title || '未知商品'
-      }
-      return '訂單詳情'
-    }
-
-    // 監聽標籤變化，當切換到訂單標籤時加載訂單數據
-    const watchActiveTab = (newTab) => {
-      // 如果 newTab 為空或 undefined，預設為 'profile'
-      const tab = newTab || 'profile'
-
-      if (tab === 'orders' && orders.value.length === 0) {
-        fetchOrders()
-      }
-      // 更新 URL 參數
-      router.push({ name: 'UserMember', params: { tab } })
-    }
-
-    // 監聽 URL 參數變化
-    watch(
-      () => props.tab,
-      (newTab) => {
-        const tab = newTab || 'profile'
-        if (tab !== activeTab.value) {
-          activeTab.value = tab
-          watchActiveTab(tab)
-        }
-      }
-    )
-
-    onMounted(() => {
-      // 如果沒有指定 tab 參數，預設導向到個人檔案頁面
-      if (!props.tab || props.tab === '') {
-        router.push({ name: 'UserMember', params: { tab: 'profile' } })
-      }
-      // 初始加載，如果當前標籤是訂單，則加載訂單數據
-      if (activeTab.value === 'orders') {
-        fetchOrders()
-      }
-      fetchCoupons()
-    })
-
-    return {
-      activeTab,
-      isLoading,
-      isLoadingOrder,
-      orders,
-      filteredOrders,
-      pagination,
-      filterStatus,
-      fetchOrders,
-      openOrderModal,
-      currentOrder,
-      formatDate,
-      getOrderTitle,
-      watchActiveTab,
-      handleOrderPaid,
-      favoriteSortOption,
-      sortedFavorites,
-      removeFromFavorites,
-      addToCart,
-      usePromoCode,
-      goToProductDetail,
-      fetchCoupons,
-      store
-    }
-  },
-  watch: {
-    activeTab(newTab) {
-      this.watchActiveTab(newTab)
-    }
+// 加入購物車
+const addToCart = async (productId) => {
+  try {
+    await store.addToCart(productId, 1)
+    alert('成功加入購物車')
+  } catch (error) {
+    alert('加入購物車失敗')
   }
 }
+
+// 使用優惠碼功能
+const usePromoCode = async (promoCode) => {
+  isLoading.value = true
+  try {
+    // 先獲取購物車資料
+    await store.getCart()
+
+    // 檢查購物車是否為空
+    if (store.cart && store.cart.length > 0) {
+      // 購物車不為空，跳轉到購物車頁面
+      router.push('/user/cart')
+      // 使用 localStorage 暫存優惠碼，以便在購物車頁面使用
+      localStorage.setItem('autoApplyPromoCode', promoCode)
+    } else {
+      // 購物車為空，跳轉到商品頁面
+      router.push('/user/products')
+      alert('您的購物車是空的，請先選擇商品')
+    }
+  } catch (error) {
+    console.error('處理優惠碼失敗：', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 查看產品詳情
+const goToProductDetail = (productId) => {
+  router.push({ name: 'UserProductDetail', params: { id: productId } })
+}
+
+// 獲取訂單
+const fetchOrders = async (page = 1) => {
+  isLoading.value = true
+  try {
+    await store.getUserOrders(page)
+  } catch (error) {
+    console.error('取得訂單失敗：', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 打開訂單詳情模態框
+const openOrderModal = async (orderId) => {
+  try {
+    isLoadingOrder.value = true
+    await store.getUserOrderDetails(orderId)
+  } catch (error) {
+    console.error('載入訂單詳情失敗：', error)
+  } finally {
+    isLoadingOrder.value = false
+  }
+}
+
+// 處理付款成功事件
+const handleOrderPaid = (orderId) => {
+  // 更新訂單列表中的訂單狀態
+  const orderIndex = orders.value.findIndex((order) => order.id === orderId)
+  if (orderIndex !== -1) {
+    orders.value[orderIndex].is_paid = true
+  }
+
+  // 更新當前訂單狀態
+  if (currentOrder.value && currentOrder.value.id === orderId) {
+    currentOrder.value.is_paid = true
+  }
+}
+
+// 取得優惠券資料
+const fetchCoupons = async () => {
+  try {
+    await store.getCoupons()
+  } catch (error) {
+    console.error('取得優惠券失敗：', error)
+  }
+}
+
+// 格式化日期
+const formatDate = (timestamp) => {
+  if (!timestamp) return '無日期資訊'
+
+  // 處理不同格式的日期
+  let date
+  if (typeof timestamp === 'number') {
+    // Unix 時間戳（秒）
+    date = new Date(timestamp * 1000)
+  } else if (typeof timestamp === 'string') {
+    // ISO 格式的日期字符串
+    date = new Date(timestamp)
+  } else {
+    // 已經是 Date 對象
+    date = timestamp
+  }
+
+  // 檢查日期是否有效
+  if (isNaN(date.getTime())) {
+    return '無效日期'
+  }
+
+  return date.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+// 獲取訂單標題
+const getOrderTitle = (order) => {
+  if (order.products && Object.keys(order.products).length > 0) {
+    const firstProduct = Object.values(order.products)[0]
+    return firstProduct.product.title || '未知商品'
+  }
+  return '訂單詳情'
+}
+
+// 監聽標籤變化，當切換到訂單標籤時加載訂單數據
+const watchActiveTab = (newTab) => {
+  // 如果 newTab 為空或 undefined，預設為 'profile'
+  const tab = newTab || 'profile'
+
+  if (tab === 'orders' && orders.value.length === 0) {
+    fetchOrders()
+  }
+  // 更新 URL 參數
+  router.push({ name: 'UserMember', params: { tab } })
+}
+
+// 監聽 URL 參數變化
+watch(
+  () => props.tab,
+  (newTab) => {
+    const tab = newTab || 'profile'
+    if (tab !== activeTab.value) {
+      activeTab.value = tab
+      watchActiveTab(tab)
+    }
+  }
+)
+
+// 監聽 activeTab 變化
+watch(activeTab, (newTab) => {
+  watchActiveTab(newTab)
+})
+
+onMounted(() => {
+  // 如果沒有指定 tab 參數，預設導向到個人檔案頁面
+  if (!props.tab || props.tab === '') {
+    router.push({ name: 'UserMember', params: { tab: 'profile' } })
+  }
+  // 初始加載，如果當前標籤是訂單，則加載訂單數據
+  if (activeTab.value === 'orders') {
+    fetchOrders()
+  }
+  fetchCoupons()
+})
 </script>

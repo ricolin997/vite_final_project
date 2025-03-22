@@ -52,7 +52,6 @@
                 type="date"
                 class="form-control"
                 v-model="readableDueDate"
-                @change="updateDueDate"
               />
             </div>
             <div class="form-check">
@@ -77,91 +76,73 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, watch, computed } from 'vue'
 
-export default {
-  name: 'CouponModal',
-  props: {
-    coupon: {
-      type: Object,
-      default: () => ({
-        title: '',
-        code: '',
-        percent: 0,
-        due_date: null, // 使用 Unix Timestamp 儲存
-        is_enabled: 0 // 默認為 0，代表未啟用
-      })
-    },
-    showBackdrop: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['close', 'save'],
-  setup(props, { emit }) {
-    const tempCoupon = ref({ ...props.coupon })
-
-    // 可讀日期（YYYY-MM-DD 格式）
-    const readableDueDate = computed({
-      get() {
-        return tempCoupon.value.due_date
-          ? new Date(tempCoupon.value.due_date * 1000).toISOString().split('T')[0]
-          : ''
-      },
-      set(value) {
-        if (value) {
-          tempCoupon.value.due_date = Math.floor(new Date(value).getTime() / 1000)
-        } else {
-          tempCoupon.value.due_date = null
-        }
-      }
+// Props 定義
+const props = defineProps({
+  coupon: {
+    type: Object,
+    default: () => ({
+      title: '',
+      code: '',
+      percent: 0,
+      due_date: null, // 使用 Unix Timestamp 儲存
+      is_enabled: 0 // 默認為 0，代表未啟用
     })
+  },
+  showBackdrop: {
+    type: Boolean,
+    default: false
+  }
+})
 
-    const updateDueDate = (event) => {
-      const value = event.target.value
-      if (value) {
-        tempCoupon.value.due_date = Math.floor(new Date(value).getTime() / 1000)
-      } else {
-        tempCoupon.value.due_date = null
-      }
-    }
+// 定義事件
+const emit = defineEmits(['close', 'save'])
 
-    // 當父層的 coupon 改變時，更新 tempCoupon
-    watch(
-      () => props.coupon,
-      (newCoupon) => {
-        tempCoupon.value = { ...newCoupon } // 直接複製父層 coupon 的值
-      },
-      { immediate: true }
-    )
+// 優惠券臨時數據
+const tempCoupon = ref({ ...props.coupon })
 
-    const emitClose = () => {
-      emit('close')
-    }
-
-    const emitSave = () => {
-      // 確保 due_date 是 Unix Timestamp 並且 is_enabled 是數字
-      if (tempCoupon.value.due_date) {
-        tempCoupon.value.due_date = Math.floor(tempCoupon.value.due_date)
-      }
-      // 將 is_enabled 保證為數字 0 或 1
-      tempCoupon.value.is_enabled = tempCoupon.value.is_enabled ? 1 : 0
-
-      emit('save', tempCoupon.value)
-    }
-
-    return {
-      tempCoupon,
-      readableDueDate,
-      updateDueDate,
-      emitClose,
-      emitSave
+// 可讀日期（YYYY-MM-DD 格式）
+const readableDueDate = computed({
+  get() {
+    return tempCoupon.value.due_date
+      ? new Date(tempCoupon.value.due_date * 1000).toISOString().split('T')[0]
+      : ''
+  },
+  set(value) {
+    if (value) {
+      tempCoupon.value.due_date = Math.floor(new Date(value).getTime() / 1000)
+    } else {
+      tempCoupon.value.due_date = null
     }
   }
+})
+
+// 當父層的 coupon 改變時，更新 tempCoupon
+watch(
+  () => props.coupon,
+  (newCoupon) => {
+    tempCoupon.value = { ...newCoupon } // 直接複製父層 coupon 的值
+  },
+  { immediate: true }
+)
+
+// 關閉模態框
+const emitClose = () => {
+  emit('close')
+}
+
+// 儲存優惠券
+const emitSave = () => {
+  // 確保 due_date 是 Unix Timestamp 並且 is_enabled 是數字
+  if (tempCoupon.value.due_date) {
+    tempCoupon.value.due_date = Math.floor(tempCoupon.value.due_date)
+  }
+  // 將 is_enabled 保證為數字 0 或 1
+  tempCoupon.value.is_enabled = tempCoupon.value.is_enabled ? 1 : 0
+
+  emit('save', tempCoupon.value)
 }
 </script>
 
-<style scoped>
-/* 樣式已移至 _couponModal.scss */
-</style>
