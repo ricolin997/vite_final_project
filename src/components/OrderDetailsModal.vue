@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineEmits } from 'vue'
 
 // 定義 props 和 emits
 defineProps({
