@@ -120,7 +120,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, defineEmits } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import PaymentButton from '@/components/PaymentButton.vue'
 
 // 組件名稱
@@ -172,7 +172,7 @@ const cleanupModalEffects = () => {
 const closeModalManually = () => {
   const modalElement = document.getElementById('orderModal')
   if (!modalElement) return
-  
+
   // 嘗試使用 Bootstrap API
   try {
     if (window.bootstrap) {
@@ -191,7 +191,7 @@ const closeModalManually = () => {
   modalElement.style.display = 'none'
   modalElement.setAttribute('aria-hidden', 'true')
   modalElement.removeAttribute('aria-modal')
-  
+
   cleanupModalEffects()
 }
 

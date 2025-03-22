@@ -83,8 +83,6 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
-
 // 定義 props 和 emits
 defineProps({
   order: {

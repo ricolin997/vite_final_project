@@ -36,8 +36,6 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
-
 // 添加元件名稱
 defineOptions({
   name: 'PaginationComponent'
